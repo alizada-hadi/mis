@@ -1,0 +1,62 @@
+
+{% extends 'base.html' %}
+
+{% block title %}
+    ثبت فرمایش 
+{% endblock title %}
+
+{% block page_title %}
+ثبت فرمایش جدید برای {{customer.first_name}} {{customer.last_name}}
+{% endblock page_title %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'customer-list' %}">لیست مشتریان</a></li>
+    <li class="breadcrumb-item active">ثبت فرمایش جدید برای {{customer.first_name}} {{customer.last_name}}</li>
+</ol>
+{% endblock breadcrumb %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-10 m-auto">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <h3 class="text-dark" style="font-weight: bold;">ثبت فرمایش جدید</h3>
+                        </div>
+                        <div class="col-lg-6">
+                            <button class="btn btn-dark btn-lg float-right">تمام فرمایشات</button>
+                        </div>
+                    </div>
+
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <label for="" class="font-size-18">محصولات</label>
+                                <select name="category" class="form-control form-control-lg" id="">
+                                    {% for category in categories %}
+                                        <option value="{{category.id}}">{{category.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="" class="font-size-18">مشتری</label>
+                                <input type="text" class="form-control form-control-lg" value="{{customer.first_name}} - {{customer.last_name}}" disabled>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="" class="font-size-18">تاریخ مراجعه</label>
+                                <input type="text" class="form-control form-control-lg" value="{% now "jS F Y - H:i" %}" disabled>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock content %}

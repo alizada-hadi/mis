@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+    
+<!-- Mirrored from themesbrand.com/skote/layouts/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 06 Jan 2021 07:30:11 GMT -->
+<head>
+        
+        <meta charset="utf-8" />
+        <title> داشبورد | {% block title %} {% endblock title %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="" name="description" />
+        <meta content="Themesbrand" name="hadi alizada" />
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="{% static 'assets/images/favicon.ico' %}">
+
+        <!-- Bootstrap Css -->
+        {% include 'links/css.html' %}
+
+    </head>
+
+    
+    <body data-sidebar="dark">
+
+    <!-- <body data-layout="horizontal" data-topbar="dark"> -->
+
+        <!-- Begin page -->
+        <div id="layout-wrapper">
+
+            
+            {% include 'components/navbar.html' %}
+
+            <!-- ========== Left Sidebar Start ========== -->
+            {% include 'components/sidebar.html' %}
+            <!-- Left Sidebar End -->
+
+            
+
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="main-content">
+
+                <div class="page-content">
+                    <div class="container-fluid">
+
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box d-flex align-items-center justify-content-between">
+                                    <h4 class="mb-0 font-size-18">{% block page_title %} {% endblock page_title %}</h4>
+
+                                    <div class="page-title-right">
+                                        {% block breadcrumb %}
+
+                                        {% endblock breadcrumb %}
+                                        
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end page title -->
+
+                        {% block content %}
+
+                        {% endblock content %}
+                        <!-- end row -->
+                    </div>
+                    <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+                <!-- show toast messages -->
+                <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+                <script>
+                    {% if messages %}
+                document.addEventListener("DOMContentLoaded", function(event) {
+                    toastr.options = { "closeButton": true, "debug": false, "newestOnTop": true,
+                        "progressBar": true, "positionClass": "toast-bottom-center", "preventDuplicates": true,
+                        "onclick": null, "showDuration": "300", "hideDuration": "1000", "timeOut": "5000",
+                        "extendedTimeOut": "1000", "showEasing": "swing", "hideEasing": "linear",
+                        "showMethod": "fadeIn", "hideMethod": "fadeOut" };
+                    {% autoescape off %}
+                        {% for msg in messages %}
+                            {% if msg.tags == "success" %}
+                            toastr.{{ msg.level_tag }}("{{ msg }}");
+                            {% else %}
+                            toastr.{{ msg.level_tag }}("{{ msg }}");
+                            {% endif %}
+                        {% endfor %}
+                    {% endautoescape %}
+                });
+            {% endif %}
+                </script>
+                <!-- end show toast messages -->
+
+
+
+                {% include "components/footer.html" %}
+            </div>
+            <!-- end main content-->
+
+        </div>
+       
+        <div class="rightbar-overlay"></div>
+
+        <!-- JAVASCRIPT -->
+        {% include 'links/js.html' %}
+    </body>
+
+
+<!-- Mirrored from themesbrand.com/skote/layouts/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 06 Jan 2021 07:30:12 GMT -->
+</html>

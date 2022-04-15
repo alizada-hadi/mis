@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    لیست مشتریان
+{% endblock title %}
+
+{% block page_title %}
+لیست مشتریان
+{% endblock page_title %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
+    <li class="breadcrumb-item active">لیست مشتریان</li>
+</ol>
+{% endblock breadcrumb %}
+{% block content %}
+<!-- create customer modal start -->
+<div class="modal fade" id="create-customer" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title mt-0">ثبت مشتری جدید</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'create-customer' %}" method="POST">
+                    {% csrf_token %}
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label for="" class="font-size-16">نام مشتری</label>
+                            <input type="text" class="form-control form-control-lg" name="first_name" placeholder="نام مشتری شما">
+                        </div>
+                        <div class="col-lg-6">
+                            <label for="" class="font-size-16">تخلص مشتری</label>
+                            <input type="text" class="form-control form-control-lg" name="last_name" placeholder="تخلص مشتری شما">
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-lg-6">
+                            <label for="" class="font-size-16">شماره تماس</label>
+                            <input type="text" class="form-control form-control-lg" name="phone_number" placeholder="شماره تماس مشتری">
+                        </div>
+                        <div class="col-lg-6">
+                            <label for="" class="font-size-16">شماره واتساپ</label>
+                            <input type="text" class="form-control form-control-lg" name="social_number" placeholder="شماره واتساپ یا تلگرام مشتری">
+                        </div>
+                    </div>
+                    <div class="row mt-2 mx-2">
+                        <label for="" class="font-size-16">آدرس مشتری</label>
+                        <textarea name="address" class="form-control form-control-lg" placeholder="آدرس مشتری شما" id="" cols="30" rows="10"></textarea>
+                    </div>
+
+                    <button class="btn btn-lg btn-light mt-2">ذخیره کردن</button>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- create customer modal end -->
+
+<div class="modal fade" id="update-customer" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title mt-0">ویرایش مشتری</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'update-customer' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="customer" id="customer_id" value="">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label for="" class="font-size-16">نام مشتری</label>
+                            <input type="text" id="first_name" class="form-control form-control-lg" name="first_name" placeholder="نام مشتری شما">
+                        </div>
+                        <div class="col-lg-6">
+                            <label for="" class="font-size-16">تخلص مشتری</label>
+                            <input type="text" id="last_name" class="form-control form-control-lg" name="last_name" placeholder="تخلص مشتری شما">
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-lg-6">
+                            <label for="" class="font-size-16">شماره تماس</label>
+                            <input type="text" id="phone" class="form-control form-control-lg" name="phone_number" placeholder="شماره تماس مشتری">
+                        </div>
+                        <div class="col-lg-6">
+                            <label for="" class="font-size-16">شماره واتساپ</label>
+                            <input type="text" id="social" class="form-control form-control-lg" name="social_number" placeholder="شماره واتساپ یا تلگرام مشتری">
+                        </div>
+                    </div>
+                    <div class="row mt-2 mx-2">
+                        <label for="" class="font-size-16">آدرس مشتری</label>
+                        <textarea name="address"  class="form-control form-control-lg" placeholder="آدرس مشتری شما" id="address" cols="30" rows="10"></textarea>
+                    </div>
+
+                    <button class="btn btn-lg btn-light mt-2">ذخیره کردن</button>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+
+<!-- delete modal start -->
+<div class="modal fade" id="delete-customer" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title mt-0" id="delete-modal-header"></h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'customer-delete' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="customer" id="cust" >
+                    <p class="alert alert-danger text-center font-size-17">
+                        آیا واقعا میخواهید این مشتری را حذف کنید؟
+                    </p>
+                    <button class="btn btn-danger btn-lg mt-2">بلی، حذف</button>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- delete modal end -->
+
+    <div class="row">
+        <div class="col-lg-10 m-auto">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-lg-6">
+                            <h3 class="text-dark" style="font-weight: bold;">لیست مشتریان</h3>
+                        </div>
+                        <div class="col-lg-6">
+                            <button 
+                            data-toggle="modal"
+                            data-target="#create-customer"
+                            class="float-right btn btn-light btn-lg">ثبت مشتری جدید <i class="bx bx-plus align-middle font-size-24"></i></button>
+                        </div>
+                    </div>
+                    <!--  -->
+                    <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="text-center font-size-18">شماره</th>
+                                    <th class="text-center font-size-18">نام و تخلص</th>
+                                    <th class="text-center font-size-18">شماره تماس</th>
+                                    <th class="text-center font-size-18">شماره واتساپ یا تلگرام</th>
+                                    <th class="text-center font-size-18">آدرس</th>
+                                    <th class="text-center font-size-18">تاریخ مراجعه</th>
+                                    <th class="text-center font-size-18">عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for customer in customers %}
+                                <tr>
+                                        <td class="font-size-17 text-center">{{forloop.counter}}</td>
+                                        <td class="font-size-17 text-center">{{customer.first_name}} {{customer.last_name}}</td>
+                                        <td class="font-size-17 text-center">{{customer.phone_number}}</td>
+                                        <td class="font-size-17 text-center">{{customer.social_number}}</td>
+                                        <td class="font-size-17 text-center">{{customer.address}}</td>
+                                        <td class="font-size-17 text-center">{{customer.created_at|date:"Y-l-d"}}</td>
+                                        <td>
+                                            <button 
+                                            data-toggle="modal"
+                                            data-target="#update-customer"
+                                            data-name="{{customer.first_name}}"
+                                            data-last="{{customer.last_name}}"
+                                            data-phone="{{customer.phone_number}}"
+                                            data-social="{{customer.social_number}}"
+                                            data-address="{{customer.address}}"
+                                            data-id="{{customer.id}}"
+                                            class="btn btn-outline-primary btn-sm edit-btns">
+                                                <i class="bx bx-edit align-middle font-size-20"></i>
+                                            </button>
+
+                                            <a href="{% url 'create-order' customer.pk %}" class="btn btn-outline-secondary btn-sm">
+                                                <i class="bx bx-rounded-horizontal-dots"></i>
+                                            </a>
+                                            <button 
+                                            data-toggle="modal"
+                                            data-target="#delete-customer"
+                                            data-name="{{customer.first_name}}"
+                                            data-last="{{customer.last_name}}"
+                                            data-id="{{customer.id}}"
+                                            class="btn btn-outline-danger btn-sm delete-btns">
+                                                <i class="bx bx-trash align-middle font-size-20"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const btns = [...document.getElementsByClassName("edit-btns")]
+        const name = document.getElementById("first_name")
+        const last = document.getElementById("last_name")
+        const phone = document.getElementById("phone")
+        const social = document.getElementById("social")
+        const address = document.getElementById("address")
+        const id = document.getElementById("customer_id")
+        btns.forEach(btn => btn.addEventListener("click", () => {
+            const first_name = btn.getAttribute("data-name")
+            const last_name = btn.getAttribute("data-last")
+            const phone_number = btn.getAttribute("data-phone")
+            const social_number = btn.getAttribute("data-social")
+            const add = btn.getAttribute("data-address")
+            const customer = btn.getAttribute("data-id")
+
+            name.value = first_name
+            last.value = last_name
+            phone.value = phone_number
+            social.value = social_number
+            address.value = add
+            id.value = customer
+        }))
+
+        // delete functionality
+        const delete_btns = [...document.getElementsByClassName("delete-btns")]
+        const delete_modal_header = document.getElementById("delete-modal-header")
+        const deleted_customer = document.getElementById("cust")
+        delete_btns.forEach(btn => btn.addEventListener("click", () => {
+            const first_name = btn.getAttribute("data-name")
+            const last_name = btn.getAttribute("data-last")
+            const id = btn.getAttribute("data-id")
+
+            delete_modal_header.innerHTML = `
+            حذف مشتری ${first_name} ${last_name} ؟
+            `
+
+            deleted_customer.value = id
+        }))
+
+    </script>
+
+{% endblock content %}
