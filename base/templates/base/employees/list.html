@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    لیست مشتریان
+{% endblock title %}
+
+{% block page_title %}
+لیست کارمندان
+{% endblock page_title %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
+    <li class="breadcrumb-item active">لیست کارمندان</li>
+</ol>
+{% endblock breadcrumb %}
+{% block content %}
+
+<!-- delete modal start -->
+<div class="modal fade" id="delete-employee" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title mt-0" id="delete-employee-modal-header"></h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'employee-delete' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="employee" id="employee" >
+                    <p class="alert alert-danger text-center font-size-18">
+                        آیا واقعا میخواهید این کارمند را حذف کنید؟
+                    </p>
+                    <button class="btn btn-danger btn-lg mt-2">بلی، حذف</button>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- delete modal end -->
+    <div class="row">
+        <div class="col-lg-10 m-auto">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-lg-6">
+                            <h3 class="text-dark" style="font-weight: bold;">لیست کارمندان</h3>
+                        </div>
+                        <div class="col-lg-6">
+                            <a href="{% url 'employee-create' %}" class="float-right btn btn-light btn-lg">ثبت کارمند جدید <i class="bx bx-plus align-middle font-size-24"></i></a>
+                        </div>
+                    </div>
+                    <!--  -->
+                    <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="text-center font-size-18">شماره</th>
+                                    <th class="text-center font-size-18">نام و تخلص</th>
+                                    <th class="text-center font-size-18">شماره تماس</th>
+                                    <th class="text-center font-size-18">نوع کارمند</th>
+                                    <th class="text-center font-size-18">آدرس</th>
+                                    <th class="text-center font-size-18">نوع کارکرد</th>
+                                    <th class="text-center font-size-18">عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for employee in employees %}
+                                    <tr>
+                                        <td class="font-size-17 text-center">{{forloop.counter}}</td>
+                                        <td class="font-size-17 text-center">{{employee.first_name}} {{employee.last_name}}</td>
+                                        <td class="font-size-17 text-center">{{employee.phone_number}}</td>
+                                        <td class="font-size-17 text-center">
+                                            <span class="badge badge-primary px-2 py-1">{{employee.emp_type}}</span>
+                                        </td>
+                                        <td class="font-size-17 text-center">{{employee.address}}</td>
+                                        <td class="font-size-17 text-center">{{employee.salary}}</td>
+                                        <td class="font-size-17 text-center">
+                                            <a href="{% url 'employee-detail' employee.id %}" class="btn btn-outline-secondary btn-sm">
+                                                <i class="bx bx-dots-horizontal-rounded align-middle font-size-22 "></i>
+                                            </a>
+                                            <a href="{% url 'employee-update' employee.id %}" class="btn btn-outline-primary btn-sm">
+                                                <i class="bx bx-edit align-middle font-size-22 "></i>
+                                            </a>
+                                            <button
+                                            data-target="#delete-employee"
+                                            data-toggle="modal"
+                                            data-id="{{employee.id}}"
+                                            data-name="{{employee.first_name}}"
+                                            data-last="{{employee.last_name}}"
+                                            class="btn btn-outline-danger btn-sm delete-btns">
+                                                <i class="bx bx-trash align-middle font-size-22 "></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const empBtns = [...document.getElementsByClassName("delete-btns")]
+        const modal_header = document.getElementById("delete-employee-modal-header")
+        const emp_hidden_input = document.getElementById("employee")
+        empBtns.forEach(btn => btn.addEventListener("click", () => {
+            emp_id = btn.getAttribute("data-id")
+            name = btn.getAttribute("data-name")
+            last = btn.getAttribute("data-last")
+            
+            modal_header.innerHTML = `
+                حذف کارمند ${name} ${last}؟
+            `
+            emp_hidden_input.value = emp_id
+        }))
+    </script>    
+
+{% endblock content %}

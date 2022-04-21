@@ -1,0 +1,111 @@
+<html>
+    <head>
+        <title>جزییات فرمایش {{order.id}}</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2&family=Tajawal:wght@300&display=swap" rel="stylesheet">
+        <style type="text/css">
+            body{
+                font-family: 'Baloo Bhaijaan 2', cursive !important;
+            }
+            h1{
+                text-align: center;
+            }
+            .right{
+                width: 48%;
+            }
+            .left{
+                width: 48%;
+                position: absolute;
+                right: 0px;
+            }
+            h3{
+                text-align: right;
+                padding: 0px;
+                margin: 0px;
+            }
+            .right h3{
+                text-align: left;
+            }
+
+            table{
+                width: 100%;
+            }
+            table thead{
+                background-color: lightgrey;
+            }
+            table thead tr th{
+                text-align: center;
+                height: 30px;
+                font-size: 20px;
+            }
+            table tbody tr td{
+                text-align: center;
+            }
+
+            .manager_sign{
+                width: 48%;
+            }
+            .customer_sign{
+                width: 48%;
+                position: absolute;
+                right: 0px;
+            }
+            
+        </style>
+    </head>
+    <body>
+        <h1>صنایع چوبی برادران احمدی</h1>
+        <hr>
+        <div class="left">
+            <h3>نام مشتری : {{order.customer.first_name}} {{order.customer.last_name}}</h3>
+            <h3 style="margin-top: 7px;">آدرس : {{order.customer.address}}</h3>
+        </div>
+        <div class="right">
+            <h3> شماره تماس : 0794153462</h3>
+            <h3> تاریخ : {{order.date_ordered|date:"Y/M/d"}}</h3>
+        </div>
+
+        <br><br>
+
+        <table dir="rtl">
+            <thead>
+                <tr>
+                    <th>شماره</th>
+                    <th>نام محصول</th>
+                    <th>نوع کار</th>
+                    <th>تعداد</th>
+                    <th>قیمت فی واحد</th>
+                    <th>مجموع</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{item.category.name}}</td>
+                        <td>{{item.type}}</td>
+                        <td>{{item.quantity}}</td>
+                        <td>{{item.price}}</td>
+                        <td>{{item.total}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <h3>مجموع پول : {{total_amount}}</h3>
+        <h3>مقدار پیش پرداخت : {{order.paid_amount}}</h3>
+        <h3>مقدار باقی مانده : {{remain_amount}}</h3>
+
+        <p style="text-align: right;">
+        نوت: لطفا تا تصفیه کامل حساب تان بل مذکور را با خود داشته باشید.
+        </p>
+        
+        <div class="customer_sign" style="text-align: right;">
+            امضاَ مشتری -----------------------------------
+        </div>
+        <div class="manager_sign" style="text-align: right;">
+            امضاَ مدیر -------------------------------------
+        </div>
+    </body>
+</html>

@@ -1,0 +1,83 @@
+
+<html dir="rlt">
+    <head>
+        <title>مشخصات فرمایش نمبر #{{order.id}}</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2&family=Tajawal:wght@300&display=swap" rel="stylesheet">
+        <style type="text/css">
+            body{
+                font-family: 'Baloo Bhaijaan 2', cursive !important;
+            }
+            h1{
+                text-align: center;
+            }
+            h3{
+                text-align: right;
+                padding: 0px;
+                margin: 0px;
+            }
+            table{
+                width: 100%;
+                
+            }
+            table thead tr{
+                background-color: lightgray;
+            }
+            table thead tr th{
+                text-align: center;
+                height: 40px;
+                font-size: 16px;
+                border: 1px solid gray;
+                border-collapse: collapse;
+            }
+            table tbody tr td{
+                text-align: center;
+                padding: 5px;
+                border: 1px solid gray;
+                border-collapse: collapse;
+            }
+            
+        </style>
+    </head>
+
+    <body>
+        
+        <h1 class="">لیست اندازه های فرمایش شماره {{order.id}}</h1>
+   
+
+    <h3>نام مشتری : {{order.customer.first_name}} {{order.customer.last_name}}</h3>
+    <h3>شماره تماس : {{order.customer.phone_number}} - {{order.customer.social_number}}</h3>
+    <h3>تاریخ ثبت فرمایش : {{order.date_ordered|date:"Y/M/d"}}</h3>
+
+    <br>
+    <h3 style="margin-bottom: 20px;">لیست اندازه ها</h3>
+
+    <table dir="rtl">
+        <thead>
+            <tr>
+                <th>شماره</th>
+                <th>محصول</th>
+                <th>تعداد</th>
+                <th>اندازه</th>
+                <th>عمق</th>
+                <th>سمت</th>
+                <th>نوع کار</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{item.category.name}}</td>
+                    <td>{{item.quantity}}</td>
+                    <td>{{item.height}} &times; {{item.width}}</td>
+                    <td>{{item.depth}}</td>
+                    <td>{{item.direction}}</td>
+                    <td>{{item.type}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>    
+</html>

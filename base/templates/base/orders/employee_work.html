@@ -1,0 +1,84 @@
+
+{% extends 'base.html' %}
+
+{% block title %}
+    جزییات فرمایش
+{% endblock title %}
+
+{% block page_title %}
+    مشخص کردن کارمند
+{% endblock page_title %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'customer-list' %}">لیست مشتریان</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'create-order' order.customer.id %}">ثبت فرمایش</a></li>
+    <li class="breadcrumb-item active">جزییات فرمایش</li>
+</ol>
+{% endblock breadcrumb %}
+
+
+{%  block content %}
+
+<div class="row">
+    <div class="col-lg-9 m-auto">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="text-dark" style="font-weight: bold;">جزییات فرمایش {{order_detail.category.name}}</h3>
+                <p class="font-size-18 text-muted">شما میتوانید از اینجا لیست گروپ ها را که روی این فرمایش کار میکند تعیین کنید.</p>
+            
+                <hr>
+                <table class="table table-sm table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th class="font-size-17 text-center">شماره</th>
+                            <th class="font-size-17 text-center">نام کارمند</th>
+                            <th class="font-size-17 text-center">نوعیت</th>
+                            <th class="font-size-17 text-center">مقدار دستمزد</th>
+                            <th class="font-size-17 text-center">عملیات</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        {% for obj in objects %}
+                            <tr>
+                                <td class="font-size-16 text-center">{{forloop.counter}}</td>
+                                <td class="font-size-16 text-center">{{obj.employee.first_name}} {{obj.employee.last_name}}</td>
+                                <td class="font-size-16 text-center">{{obj.employee.emp_type.name}}</td>
+                                <td class="font-size-16 text-center">{{obj.fee}}</td>
+                                <td class="font-size-16 text-center">
+                                    <button class="btn btn-outline-danger btn-sm">
+                                        <i class="bx bx-trash align-middle font-size-20 "></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <hr>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label for="" class="font-size-20">نام کارمند</label>
+                            <select name="emp" class="form-control form-control-lg font-size-18" id="">
+                                <option value="">لطفا نام کارمند را انتخاب کنید</option>
+                                {% for employee in employees %}
+                                    <option value="{{employee.id}}">{{employee.first_name}} {{employee.last_name}} - <b>{{employee.emp_type.name}}</b></option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-lg-6">
+                            <label for="" class="font-size-20">مقدار دستمزد</label>
+                            <input type="number" step="0.05" class="form-control form-control-lg font-size-18" name="fee" placeholder="300">
+                        </div>
+                    </div>
+                    <button class="btn btn-dark btn-lg mt-2">ذخیره کردن</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

@@ -19,6 +19,116 @@
 
 {% block content %}
 
+<!-- recieve modal start -->
+<div class="modal fade" id="recieve" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title mt-0">دریافت پول از مشتری  {{customer.first_name}} {{customer.last_name}}</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'add-recieve' %}" method="POST">
+                    {% csrf_token %}
+                    <div>
+                        <label for="" class="font-size-18">دریافت بابت</label>
+                        <select name="order" class="form-control form-control-lg" id="">
+                            <option value="">-----</option>
+                            {% for order in orders %}
+                                <option value="{{order.id}}">{{order.date_ordered|date:"Y-M-d"}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mt-2">
+                        <label for="" class="font-size-18">مقدار پول به عدد</label>
+                        <input type="number" class="form-control form-control-lg" placeholder="10000" name="amount">
+                    </div>
+                    <div class="mt-2">
+                        <label for="" class="font-size-18">مقدار پول به حروف</label>
+                        <input type="text" class="form-control form-control-lg" placeholder="ده هزار" name="amount_letter">
+                    </div>
+                    <div class="mt-2">
+                        <label for="" class="font-size-18">تاریخ دریافت</label>
+                        <input type="date" class="form-control form-control-lg"  name="recieve_date">
+                    </div>
+                    <button class="btn btn-lg btn-light mt-4">ذخیره کردن</button>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- recieve modal end -->
+
+<!-- recieve list modal start -->
+<div class="modal fade" id="recieve_list" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title mt-0"> لیست دریافتی ها از مشتری  {{customer.first_name}} {{customer.last_name}}</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- recieve list modal end -->
+
+    <div class="row">
+        <div class="col-lg-10 m-auto">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-1">
+                            
+                        </div>
+    
+                        <div class="col-lg-10 align-self-center">
+                            <div class="text-lg-center mt-4 mt-lg-0">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div>
+                                            <p class="text-dark mb-2 font-size-20" style="font-weight: bold;">مجموع پول</p>
+                                            <h5 class="mb-0">{{total}}</h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div>
+                                            <p class="text-dark mb-2 font-size-20" style="font-weight: bold;">مقدار دریافت شده</p>
+                                            <h5 class="mb-0">{{recieved_amount}}</h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div>
+                                            <p class="text-dark mb-2 font-size-20" style="font-weight: bold;">مقدار باقی</p>
+                                            <h5 class="mb-0">{{remain_total_amount}}</h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div>
+                                            <p class="text-dark mb-2 font-size-20" style="font-weight: bold;">آخرین دریافت</p>
+                                            <h5 class="mb-0">{{last_recieved_at.recived_at|date:"Y-M-j"}}</h5>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="col-lg-1 d-none d-lg-block">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-lg-10 m-auto">
             <div class="card">
@@ -28,31 +138,60 @@
                             <h3 class="text-dark" style="font-weight: bold;">ثبت فرمایش جدید</h3>
                         </div>
                         <div class="col-lg-6">
-                            <button class="btn btn-dark btn-lg float-right">تمام فرمایشات</button>
+                            <button 
+                            data-toggle="modal"
+                            data-target="#recieve"
+                            class="btn btn-dark btn-sm float-right font-size-18">دریافت پول
+                            <i class="mdi mdi-cash align-middle font-size-22 ml-1 "></i>
+                        </button>
+                        <a href="{% url 'recieve-list' customer.pk %}" class="btn btn-primary btn-sm float-right font-size-18 mr-2">
+                        لیست دریافتی ها
+                        <i class="mdi mdi-format-list-numbered align-middle font-size-22 ml-1"></i>
+                    </a>
                         </div>
                     </div>
 
                     <form action="" method="POST">
                         {% csrf_token %}
-                        <div class="row">
-                            <div class="col-lg-4">
-                                <label for="" class="font-size-18">محصولات</label>
-                                <select name="category" class="form-control form-control-lg" id="">
-                                    {% for category in categories %}
-                                        <option value="{{category.id}}">{{category.name}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="col-lg-4">
-                                <label for="" class="font-size-18">مشتری</label>
-                                <input type="text" class="form-control form-control-lg" value="{{customer.first_name}} - {{customer.last_name}}" disabled>
-                            </div>
-                            <div class="col-lg-4">
-                                <label for="" class="font-size-18">تاریخ مراجعه</label>
-                                <input type="text" class="form-control form-control-lg" value="{% now "jS F Y - H:i" %}" disabled>
-                            </div>
-                        </div>
+                        <p class="alert alert-info text-center mt-2 font-size-18">
+                            تعداد کل فرمایشات مشتری {{customer.first_name}} {{customer.last_name}} <span class="badge badge-primary px-2 py-1 align-middle font-size-20 ">{{customer.order_set.all.count}}</span> می باشد. آیا میخواهید فرمایش جدید ثبت شود؟                        </p>
+
+                        <button class="btn btn-lg btn-light mt-1">ایجاد فرمایش جدید</button>
                     </form>
+
+                    <hr>
+                    <h3 class="text-dark mt-5" style="font-weight: bold;">لیست فرمایشات</h3>
+                    <table class="table table-sm table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th class="font-size-18 text-center">نمبر مسلسل</th>
+                                <th class="font-size-18 text-center">نمبر بل</th>
+                                <th class="font-size-18 text-center">تعداد</th>
+                                <th class="font-size-18 text-center">عملیات</th>
+                            </tr>
+                            <tbody>
+                                {% for order in orders %}
+                                    <tr>
+                                        <td class="font-size-17 text-center">{{forloop.counter}}</td>
+                                        <td class="font-size-17 text-center">#{{order.id}}</td>
+                                        <td class="font-size-17 text-center">{{order.orderdetail_set.all.count}}</td>
+                                        <td>
+                                            <a href="{% url 'order-detail' order.pk %}" class="btn btn-outline-secondary btn-sm">
+                                                <i class="bx bx-dots-horizontal-rounded font-size-22 align-middle"></i>
+                                            </a>
+                                            <button class="btn btn-outline-danger btn-sm">
+                                                <i class="bx bx-trash font-size-22 align-middle"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <p class="alert alert-info text-center font-size-17">
+                                        هیچ فرمایش برای این مشتری ثبت نشده است.
+                                    </p>
+                                {% endfor %}
+                            </tbody>
+                        </thead>
+                    </table>
                 </div>
             </div>
         </div>

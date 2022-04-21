@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}
+   جزییات کارمند
+{% endblock title %}
+
+{% block page_title %}
+جزییات کارمند
+{% endblock page_title %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'employee-list' %}">لیست کارمندان</a></li>
+    <li class="breadcrumb-item active">جزییات کارمند </li>
+</ol>
+{% endblock breadcrumb %}
+{% block content %}
+
+<style>
+    
+</style>
+
+<!-- pay modal start -->
+<div class="modal fade" id="employee-pay" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title mt-0" id="pay-employee-modal-header"></h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'employee-get-salary' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="employee_fee" id="employee_fee">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label for="" class="font-size-18">مبلغ باقی مانده</label>
+                            <input type="number" class="form-control form-control-lg" id="remain" disabled>
+                        </div>
+                        <div class="col-lg-6">
+                            <label for="" class="font-size-18">مبلغ پرداخت</label>
+                            <input type="number" step="0.05" name="amount" class="form-control form-control-lg" required >
+                        </div>
+                    </div>
+                    <button class="btn btn-dark btn-lg mt-3">پرداخت</button>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- pay modal end -->
+
+    <div class="row">
+        <div class="col-lg-12 m-auto">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="text-dark" style="font-weight: bold;">لیست کارکرد و حسابات "{{employee.emp_type.name}}" آقای {{employee.first_name}} {{employee.last_name}}</h2>
+                    <hr>
+
+                    <table class="table table-md table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="font-size-18 text-center">شماره</th>
+                                <th class="font-size-18 text-center">اسم و آدرس مشتری</th>
+                                <th class="font-size-18 text-center">نوع کارکرد</th>
+                                <th class="font-size-18 text-center">تعداد یا متراچ</th>
+                                <th class="font-size-18 text-center">میزان دستمزد</th>
+                                <th class="font-size-18 text-center">مبلغ قابل پرداخت</th>
+                                <th class="font-size-18 text-center">مبلغ پرداخت شده</th>
+                                <th class="font-size-18 text-center">مبلغ باقی مانده</th>
+                                <th class="font-size-18 text-center">تاریخ پرداخت</th>
+                                <th class="font-size-18 text-center">عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for work in works %}
+                                <tr>
+                                    <td class="font-size-16 text-center">{{forloop.counter}}</td>
+                                    <td class="font-size-16 text-center">{{work.order_detail.order.customer.first_name}} {{work.order_detail.order.customer.address}}</td>
+                                    <td class="font-size-16 text-center">{{work.order_detail.category.name}} {{work.order_detail.type}}</td>
+                                    <td class="font-size-16 text-center">{{work.order_detail.quantity}}</td>
+                                    <td class="font-size-16 text-center">{{work.fee}}</td>
+                                    <td class="font-size-16 text-center">{{work.total_amount}}</td>
+                                    <td class="font-size-16 text-center">{{work.get_amount}}</td>
+                                    <td class="font-size-16 text-center">{{work.remain_amount}}</td>
+                                    <td class="font-size-16 text-center">{{work.updated_at|date:"Y-M-d: H:i:s"}}</td>
+                                    <td class="font-size-16 text-center">
+                                        {% if work.get_amount == work.total_amount %}
+                                        <button class="btn btn-outline-success">پرداخت شد</button>
+                                        {% else %}
+                                        <button 
+                                        data-toggle="modal"
+                                        data-target="#employee-pay"
+                                        data-name="{{work.employee.first_name}} {{work.employee.last_name}}"
+                                        data-work="{{work.order_detail.category.name}} {{work.order_detail.type}}"
+                                        data-remain="{{work.remain_amount}}"
+                                        data-order_detail="{{work.id}}"
+                                        class="btn btn-outline-dark pay-btns">پرداخت</button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <p class="alert alert-info text-center font-size-18">لیست حسابات کارمند فوق در حال حاضر خالی می باشد.</p>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script
+    src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"></script>
+
+    <script>
+        const modal_title = document.getElementById("pay-employee-modal-header")
+        const payBtns = [...document.getElementsByClassName('pay-btns')]
+        const remain_amount = document.getElementById("remain")
+        const employee_fee = document.getElementById("employee_fee")
+        const order_detail = document.getElementById("order_detail")
+        payBtns.forEach(btn=>btn.addEventListener("click", () => {
+            const name = btn.getAttribute("data-name")
+            const work = btn.getAttribute("data-work")
+            const r = btn.getAttribute("data-remain")
+            const id = btn.getAttribute("data-order_detail")
+            modal_title.innerHTML = `
+                پرداخت به ${name} بابت کار ${work}
+            `
+            remain_amount.value = r
+            employee_fee.value = id
+
+        }))
+    </script>
+{% endblock content %}

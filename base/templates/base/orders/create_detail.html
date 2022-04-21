@@ -1,0 +1,357 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    جزییات فرمایش 
+{% endblock title %}
+
+{% block page_title %}
+جزییات فرمایش
+{% endblock page_title %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'customer-list' %}">لیست مشتریان</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'create-order' order.customer.id %}">ثبت فرمایش</a></li>
+    <li class="breadcrumb-item active">جزییات فرمایش</li>
+</ol>
+{% endblock breadcrumb %}
+
+{% block content %}
+<style>
+    #alternative{
+        display: none;
+    }
+    #painter{
+        display: none;
+    }
+</style>
+
+<!-- get pre pay -->
+
+<div class="modal fade" id="get-pre-pay" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title mt-0">دریافت پیش پرداخت / بیانه</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'update-order' order.pk %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="customer" value="{{order.customer.id}}">
+                    <div>
+                        <label for="" class="font-size-18">مقدار پیش پرداخت</label>
+                        <input type="number" class="form-control form-control-lg" name="pre_paid" placeholder="1000">
+                    </div>
+                    <button class="btn btn-lg btn-light mt-4">دریافت کردن</button>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- get pre pay end -->
+
+<div class="row">
+    <div class="col-lg-10 m-auto">
+        <div class="card rounded-lg">
+            <div class="card-body shadow-lg">
+                <div class="row">
+                    <div class="col-lg-1">
+                        
+                    </div>
+
+                    <div class="col-lg-10 align-self-center">
+                        <div class="text-lg-center mt-4 mt-lg-0">
+                            <div class="row">
+                                <div class="col-3">
+                                    <div>
+                                        <p class="text-dark mb-2 font-size-20">تعداد فرمایشات</p>
+                                        <h5 class="mb-0">{{items_count}}</h5>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div>
+                                        <p class="text-dark mb-2 font-size-20">مجموع پول</p>
+                                        <h5 class="mb-0">{{total_amount}}</h5>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div>
+                                        <p class="text-dark mb-2 font-size-20">مقدار دریافتی</p>
+                                        <h5 class="mb-0">{{order.paid_amount}}</h5>
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div>
+                                        <p class="text-dark mb-2 font-size-20">مقدار باقی مانده</p>
+                                        <h5 class="mb-0">{{remain_amount}}</h5>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-1 d-none d-lg-block">
+                        
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="row">
+        <div class="col-lg-10 m-auto">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="text-dark" style="font-weight: bold;">لیست فرمایش</h3>
+                    <table class="table table-sm table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th class="font-size-17 text-center">شماره</th>
+                                <th class="font-size-17 text-center">کار</th>
+                                <th class="font-size-17 text-center">نوع کار</th>
+                                <th class="font-size-17 text-center">همراه رنگ</th>
+                                <th class="font-size-17 text-center">سمت</th>
+                                <th class="font-size-17 text-center">تعداد</th>
+                                <th class="font-size-17 text-center">قیمت فی واحد</th>
+                                <th class="font-size-17 text-center"> مجموع کل به افغانی</th>
+                                <th class="font-size-17 text-center">عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in items %}
+                                {% if not item.employeefee_set.all %}
+                                <tr>
+                                    <td class="font-size-16 text-center bg-danger text-white">{{forloop.counter}}</td>
+                                    <td class="font-size-16 text-center">{{item.category.name}}</td>
+                                    <td class="font-size-16 text-center">{{item.type}}</td>
+                                    <td class="font-size-16 text-center">
+                                        {% if item.with_color == "نخیر" %}
+                                            <span class="badge badge-danger px-2 py-1 font-size-16">نخیر</span>
+                                        {% else %}
+                                        <span class="badge badge-primary px-2 py-1 font-size-16">بلی</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="font-size-16 text-center">{{item.direction}}</td>
+                                    <td class="font-size-16 text-center">{{item.quantity}}</td>
+                                    <td class="font-size-16 text-center">{{item.price}} {{item.price_unit}}</td>
+                                    <td class="font-size-16 text-center">{{item.total}}</td>
+                                    <td class="font-size-16 text-center">
+                                        <button class="btn btn-outline-danger btn-sm">
+                                            <i class="bx bx-trash font-size-20 align-middle"></i>
+                                        </button>
+                                        <button class="btn btn-outline-primary btn-sm">
+                                            <i class="bx bx-edit font-size-20 align-middle"></i>
+                                        </button>
+                                        <a href="{% url 'add-employee' item.id %}" class="btn btn-outline-success btn-sm">
+                                            <i class="bx bx-dots-horizontal-rounded align-middle font-size-20 "></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td class="font-size-16 text-center">{{forloop.counter}}</td>
+                                    <td class="font-size-16 text-center">{{item.category.name}}</td>
+                                    <td class="font-size-16 text-center">{{item.type}}</td>
+                                    <td class="font-size-16 text-center">
+                                        {% if item.with_color == "نخیر" %}
+                                            <span class="badge badge-danger px-2 py-1 font-size-16">نخیر</span>
+                                        {% else %}
+                                        <span class="badge badge-primary px-2 py-1 font-size-16">بلی</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="font-size-16 text-center">{{item.direction}}</td>
+                                    <td class="font-size-16 text-center">{{item.quantity}}</td>
+                                    <td class="font-size-16 text-center">{{item.price}} {{item.price_unit}}</td>
+                                    <td class="font-size-16 text-center">{{item.total}}</td>
+                                    <td class="font-size-16 text-center">
+                                        <button class="btn btn-outline-danger btn-sm">
+                                            <i class="bx bx-trash font-size-20 align-middle"></i>
+                                        </button>
+                                        <button class="btn btn-outline-primary btn-sm">
+                                            <i class="bx bx-edit font-size-20 align-middle"></i>
+                                        </button>
+                                        <a href="{% url 'add-employee' item.id %}" class="btn btn-outline-success btn-sm">
+                                            <i class="bx bx-dots-horizontal-rounded align-middle font-size-20 "></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                
+                            {% empty %}
+                            <p class="alert alert-info text-center font-size-17">جزییات لیست شما در حال حاضر خالیست.</p>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-10 m-auto">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <h3 class="text-dark" style="font-weight: bold;">جزییات فرمایش</h3>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="dropdown float-right">
+                                <button class="btn btn-dark btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                   گزینه ها <i class="mdi mdi-chevron-down ml-1"></i> 
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item font-size-18" target="_blank" href="{% url 'customer-order-pdf' order.id %}">چاپ بل برای مشتری</a>
+                                    <a class="dropdown-item font-size-18" target="_blank" href="{% url 'employee-order-pdf' order.id %}">چاپ بل برای کارمند</a>
+                                    <!-- <a class="dropdown-item font-size-18" href="#">Something else</a> -->
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <div class="row mt-3">
+                            <div class="col-lg-3">
+                                <label for="" class="font-size-18">نام محصول</label>
+                                <select name="category" class="form-control form-control-lg" id="category">
+                                    {% for category in categories %}
+                                        <option value="{{category.name}}">{{category.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="" class="font-size-18">تعداد</label>
+                                <input type="number" name="qty" class="form-control form-control-lg" placeholder="تعداد فرمایشات">
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="" class="font-size-18">قیمت فی واحد</label>
+                                <input type="number" name="price" class="form-control form-control-lg" placeholder="قیمت">
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="" class="font-size-18">واحد پول</label>
+                                <select name="price_unit" class="form-control form-control-lg" id="unit_price">
+                                    <option value="afg">افغانی</option>
+                                    <option value="usd">دالر</option>
+                                    <option value="toman">تومان ایران</option>
+                                    <option value="kaldar">کلدار پاکستان</option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-3 mt-2" id="alternative">
+                                <label for="" class="font-size-18" id="price_unit_label"></label>
+                                <input type="number" step="0.01" name="alternative" class="form-control form-control-lg" placeholder="80.40">
+                            </div>
+
+                            <div class="col-lg-3 mt-2">
+                                <label for="" class="font-size-18">نوعیت کار</label>
+                                <input type="text" name="work_type" class="form-control form-control-lg" placeholder="هشت ملی">
+                            </div>
+                            <div class="col-lg-3 mt-2" id="height">
+                                <label for="" class="font-size-18">بلندی / قد</label>
+                                <input type="number" class="form-control form-control-lg" name="height" placeholder="ارتفاع">
+                            </div>
+                            <div class="col-lg-3 mt-2" id="width">
+                                <label for="" class="font-size-18">عرض / بر</label>
+                                <input type="number" class="form-control form-control-lg" name="width" placeholder="عرض">
+                            </div>
+                            <div class="col-lg-3 mt-2" id="depth">
+                                <label for="" class="font-size-18">عمق</label>
+                                <input type="number" class="form-control form-control-lg" name="depth" placeholder="عمق">
+                            </div>
+                            <div class="col-lg-3 mt-2" id="direction">
+                                <label for="" class="font-size-18">سمت</label>
+                                <select name="direction" class="form-control form-control-lg" id="">
+                                    <option value="right">راست</option>
+                                    <option value="left">چپ</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3 mt-2" id="color">
+                                <label for="" class="font-size-18">همراه رنگ</label>
+                                <select name="with_color" class="form-control form-control-lg" id="with_color">
+                                    <option value="">------</option>
+                                    <option value="yes">بلی</option>
+                                    <option value="no">نخیر</option>
+                                </select>
+                            </div>
+                        </div>  
+                         
+                        <button class="btn btn-dark btn-lg mt-4">ذخیره کردن</button>
+                        <button 
+                        data-toggle="modal"
+                        data-target="#get-pre-pay"
+                        type="button"
+                        class="btn btn-primary btn-lg mt-4">دریافت بیانه</button>
+                    </form>
+
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function(){
+          $("#category").change(function(){
+              var val = $(this).val();
+              if(val == "پرس" || val == "سی ان سی"){
+                  $("#direction").hide()
+                  $("#height").hide()
+                  $("#width").hide()
+                  $("#depth").hide() 
+                  $("#color").hide()
+                }
+                else if(val == "دروازه" || val == "کلکین" || val == "ضد سرقت"){
+                $("#direction").show()
+                $("#height").show()
+                $("#width").show()
+                $("#depth").show()
+                $("#color").show()
+            }
+          })  
+          $("#with_color").change(function(){
+              let value = $(this).val()
+              if (value == "yes"){
+                  $("#painter").show()
+              }
+              else{
+                  $("#painter").hide()
+              }
+          })
+        })
+        var label = document.getElementById("price_unit_label")
+        $("#unit_price").change(function(){
+            var value = $(this).val()
+            if(value == "usd"){
+                $("#alternative").show()
+                label.innerHTML = "نرخ دالر"
+            }else if(value == "toman"){
+                $("#alternative").show()
+                label.innerHTML = "نرخ تومان" 
+            }
+            else if(value == "kaldar"){
+                $("#alternative").show()
+                label.innerHTML = "نرخ کلدار" 
+            }
+            else{
+                $("#alternative").hide()
+            }
+        })
+        
+    </script>
+
+{% endblock content %}

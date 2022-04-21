@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     # 3rd party apps
     'jalali_date',
+    'widget_tweaks'
 ]
 
 JALALI_DATE_DEFAULTS = {
@@ -104,7 +105,7 @@ WSGI_APPLICATION = 'factory.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'factory',
+        'NAME': 'factory2',
         'HOST' : 'localhost', 
         'USER' : 'postgres', 
         'PASSWORD' : 'testing321',

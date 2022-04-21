@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}
+   ویرایش کارمند
+{% endblock title %}
+
+{% block page_title %}
+ویرایش کارمند
+{% endblock page_title %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'employee-list' %}">لیست کارمندان</a></li>
+    <li class="breadcrumb-item active">ویرایش کارمند </li>
+</ol>
+{% endblock breadcrumb %}
+{% block content %}
+
+<style>
+    #salary_month{
+        display: none;
+    }
+</style>
+
+    <div class="row">
+        <div class="col-lg-10 m-auto">
+            <div class="card">
+                <div class="card-body">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <label for="" class="font-size-18">نوع کارمند</label>
+                                {% render_field form.emp_type class="form-control form-control-lg" %}
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="" class="font-size-18">نام</label>
+                                
+                                {% render_field form.first_name class="form-control form-control-lg" %}
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="" class="font-size-18">تخلص کارمند</label>
+                                {% render_field form.last_name class="form-control form-control-lg" %}
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="" class="font-size-18">شماره تماس</label>
+                                {% render_field form.phone_number class="form-control form-control-lg" %}
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-lg-3">
+                                <label for="" class="font-size-18">نوع کارکرد</label>
+                                {% render_field form.salary class="form-control form-control-lg" %}
+                            </div>
+                            <div class="col-lg-3" id="salary_month">
+                                <label for="" class="font-size-18" id="salary_label"></label>
+                                {% render_field form.salary_per_month class="form-control form-control-lg" type="number" %}
+                            </div>
+                            <div class="col-lg-3" id="">
+                                <label for="" class="font-size-18">آدرس</label>
+                                {% render_field form.address class="form-control form-control-lg" %}
+                            </div>
+                        </div>
+                        <button class="btn btn-dark btn-lg mt-2">ذخیره کردن</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script
+    src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"></script>
+    <script>
+        const salary_label = document.getElementById('salary_label')
+        $(document).ready(function(){
+            $("#emp_salary_type").change(function() {
+                var val = $(this).val()
+                if(val == "month"){
+                    $("#salary_month").show()
+                    salary_label.innerHTML = "معاش ماهوار"
+                }
+                else{
+                    $("#salary_month").hide()
+                }
+            })
+        })
+    </script>
+
+    
+
+{% endblock content %}

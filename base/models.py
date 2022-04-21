@@ -1,5 +1,6 @@
+from decimal import Decimal
+import sre_compile
 from django.db import models
-
 # Create your models here.
 
 
@@ -15,6 +16,33 @@ class Customer(models.Model):
         return f"{self.first_name} - {self.last_name}"
 
 
+class EmployeeType(models.Model):
+    name = models.CharField(max_length=200)
+    description = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+class Employee(models.Model):
+    SALARY =  (
+        ("ماهوار", "ماهوار"),
+        ("کونترات", "کونترات"),
+    )
+    emp_type = models.ForeignKey(EmployeeType, on_delete=models.SET_NULL, null=True)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    address = models.CharField(max_length=500)
+    phone_number = models.CharField(max_length=20)
+    salary = models.CharField(max_length=20, choices=SALARY)
+    salary_per_month = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+    def __str__(self) -> str:
+        return f"{self.first_name} {self.last_name}"
+
+
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
@@ -23,9 +51,11 @@ class Category(models.Model):
         return self.name
 
 
+
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    paid_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="مقدار پرداخت شده", null=True, blank=True)
+    total_amount = models.DecimalField(max_digits=8, decimal_places=2, default=0)
     date_ordered = models.DateTimeField(auto_now_add=True)
 
 
@@ -33,33 +63,78 @@ class Order(models.Model):
         return f"{self.customer.first_name}'s order"
 
 
+class Recieve(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
+    amount = models.DecimalField(max_digits=8, decimal_places=2, default=0)
+    amount_letter = models.CharField(max_length=200)
+    recived_at = models.DateField()
+
+    def __str__(self):
+        return f"recieve from {self.order.id}"
+
+
 class OrderDetail(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
     DIRECTION = (
         ("راست", "راست"),
         ("چپ", "چپ"),
     )
+    PRICE_UNIT = (
+        ("افغانی", "افغانی"), 
+        ("دالر",  "دالر"),
+        ("کلدار",  "کلدار"),
+        ("تومان",  "تومان"),
+    )
+    WITH_COLOR = (
+        ("بلی", "بلی"), 
+        ("نخیر",  "نخیر"),
+    )
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    # employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     height = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="قد", null=True, blank=True)
     width = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="بر", null=True, blank=True)
     depth = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="عمق", null=True, blank=True)
     direction = models.CharField(max_length=30, choices=DIRECTION, default="راست", null=True,  blank=True)
-    quantity = models.DecimalField(max_digits=6, decimal_places=2, default=0, verbose_name="مقدار / تعداد")
+    quantity = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="مقدار / تعداد")
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="قیمت فی واحد")
+    price_unit = models.CharField(max_length=20, choices=PRICE_UNIT)
+    alternative = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="مجموع")
-    paid_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="مقدار پرداخت شده")
     remain_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="مقدار باقی مانده")
+    with_color =  models.CharField(max_length=20, choices=WITH_COLOR, null=True, blank=True)
     type = models.CharField(max_length=200, verbose_name="نوعیت کار")
 
     def save(self, *args, **kwargs):
         if not self.total:
-            self.total = self.order.quantity * self.price
+            self.total = self.quantity * (self.price * self.alternative)
         if not self.remain_amount:
-            self.remain_amount = self.total - self.paid_amount
+            self.remain_amount = self.total - self.order.paid_amount
     
         super().save(*args, **kwargs)
 
 
     def __str__(self):
         return f"{self.order}'s detail "
+
+
+
+class EmployeeFee(models.Model):
+    employee = models.ForeignKey(Employee, on_delete=models.SET_NULL,  null=True)
+    order_detail = models.ForeignKey(OrderDetail, on_delete=models.SET_NULL, null=True)
+    fee = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    get_amount = models.DecimalField(max_digits=8, decimal_places=2, default=0)
+    total_amount = models.DecimalField(max_digits=8, decimal_places=2, default=0)
+    remain_amount = models.DecimalField(max_digits=8, decimal_places=2, default=0)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return f"{self.employee.first_name}'s work "
+
+    def save(self, *args, **kwargs):
+        if not self.total_amount:
+            self.total_amount = Decimal(self.order_detail.quantity) * Decimal(self.fee)
+
+        if not self.remain_amount:
+            self.remain_amount = Decimal(self.total_amount )- Decimal(self.get_amount)
+
+        super().save(*args, **kwargs)
+
