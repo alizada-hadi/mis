@@ -3,17 +3,17 @@
 {% load jalali_tags %}
 {% load widget_tweaks %}
 {% block title %}
-   لیست مصارف سال {{current_year_in_hijri}}
+   لیست مصارف ماه {{month_name}}
 {% endblock title %}
 
 {% block page_title %}
-لیست مصارف سال {{current_year_in_hijri}}
+لیست مصارف ماه {{month_name}}
 {% endblock page_title %}
 
 {% block breadcrumb %}
 <ol class="breadcrumb m-0">
     <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
-    <li class="breadcrumb-item active">لیست مصارف سال {{current_year_in_hijri}}</li>
+    <li class="breadcrumb-item active">لیست مصارف ماه {{month_name}}</li>
 </ol>
 {% endblock breadcrumb %}
 {% block content %}
@@ -47,7 +47,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-lg-6">
-                        <h3 class="text-dark" style="font-weight:bold" >گزارشات کلی سال {{current_year_in_hijri}}</h3>
+                        <h3 class="text-dark" style="font-weight:bold" >گزارشات کلی ماه {{month_name}}</h3>
                     </div>
                     <div class="col-lg-6">
                         <a href="{% url 'expense-list' %}" class="btn btn-dark btn-lg float-right mb-2">برگشت
@@ -85,8 +85,8 @@
                                 </div>
                                 <div class="col-3">
                                     <div>
-                                        <p class="text-dark font-size-20 mb-2" style="font-weight: bold;" >نسبت به سال گذشته</p>
-                                        <h5 class="mb-0 text-dark" dir="ltr">{{percentange}} %</h5>
+                                        <p class="text-dark font-size-20 mb-2" style="font-weight: bold;" >نسبت به ماه گذشته</p>
+                                        <h5 class="mb-0 text-dark" dir="ltr">{{percentage}} %</h5>
                                     </div>
                                 </div>
                             </div>

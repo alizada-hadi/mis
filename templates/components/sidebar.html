@@ -34,13 +34,13 @@
                         <li><a href="{% url 'expense-annual' %}" class="font-size-18" key="t-inbox">
                             <i class="mdi mdi-chart-scatter-plot"></i>
                             مصارف این سال</a></li>
-                        <li><a href="email-read.html" class="font-size-18" key="t-read-email">
+                        <li><a href="{% url 'expense-monthly' %}" class="font-size-18" key="t-read-email">
                             <i class="mdi mdi-chart-ppf"></i>
                             مصارف این ماه</a></li>
-                        <li><a href="email-read.html" class="font-size-18" key="t-read-email">
+                        <li><a href="{% url 'expense-weekly' %}" class="font-size-18" key="t-read-email">
                             <i class="mdi mdi-finance"></i>
                             مصارف این هفته</a></li>
-                        <li><a href="email-read.html" class="font-size-18" key="t-read-email">
+                        <li><a href="{% url 'expense-daily' %}" class="font-size-18" key="t-read-email">
                             <i class="mdi mdi-chart-bubble"></i>
                             مصارف امروز</a></li>
                     </ul>
