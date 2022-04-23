@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load jalali_tags %}
+{% load widget_tweaks %}
+{% block title %}
+   جزییات مصرف
+{% endblock title %}
+
+{% block page_title %}
+جزییات مصرف
+{% endblock page_title %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'expense-list' %}">لیست مصارف</a></li>
+    <li class="breadcrumb-item active">جزییات مصرف</li>
+</ol>
+{% endblock breadcrumb %}
+{% block content %}
+<!-- delete modal start -->
+<div class="modal fade" id="delete_expense" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title mt-0" id="delete-expense-modal-header"></h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'expense-delete' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="exp_id" id="exp-id">
+                    <p class="alert alert-danger text-center font-size-18">
+                        آیا میخواهید این مورد را از لیست مصارف خود حذف نمایید؟ 
+                    </p>
+                    <button class="btn btn-danger btn-lg mt-3">بلی، حذف</button>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- delete modal end -->
+    <div class="row">
+        <div class="col-lg-10 m-auto">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <h3 class="text-dark" style="font-weight: bold;">جزییات مصرف</h3>
+                        </div>
+                        <div class="col-lg-6">
+                            <a href="{% url 'expense-list' %}" class="btn btn-dark btn-lg float-right mb-2">برگشت
+                                <i class="bx bx-left-arrow-alt align-middle font-size-20 "></i>
+                            </a>
+                            <a href="#" class="btn btn-dark btn-lg float-right mr-2">
+                                <i class="bx bx-printer align-middle font-size-20"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <table class="table table-lg">
+                                <tr>
+                                    <th class="font-size-18">
+                                        <i class="bx bx-run align-middle font-size-22 mr-2"></i>
+                                        عنوان مصرف
+                                    </th>
+                                    <td class="font-size-17">{{expense.category.category_name}}</td>
+                                </tr>
+                                {% if expense.category.category_name == "خرید محصولات" %}
+                                    <tr>
+                                        <th class="font-size-18">
+                                            <i class="bx bx-command align-middle font-size-22 mr-2"></i>
+                                            جنس خریداری شده
+                                        </th>
+                                        <td class="font-size-17">{{expense.good_name}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="font-size-18">
+                                            <i class="bx bx-star align-middle font-size-22 mr-2"></i>
+                                            تعداد جنس خریداری شده
+                                        </th>
+                                        <td class="font-size-17">{{expense.exp_quantity}}</td>
+                                    </tr>
+                                {% elif expense.category.category_name == "اجاره کارخانه" %}
+                                    <tr>
+                                        <th class="font-size-18">
+                                            <i class="bx bx-time align-middle font-size-22 mr-2"></i>
+                                            تاریخ
+                                        </th>
+                                        <td class="font-size-17">{{expense.rant_month}}</td>
+                                    </tr>
+                                {% elif expense.category.category_name == "کرایه حمل و نقل" %}
+                                    <tr>
+                                        <th class="font-size-18">
+                                            <i class="bx bx-location-plus align-middle font-size-22 mr-2"></i>
+                                            از - تا
+                                        </th>
+                                        <td class="font-size-17">{{expense.from_place}} - {{expense.to_place}}</td>
+                                    </tr>
+                                {% endif %}
+                                <tr>
+                                    <th class="font-size-18">
+                                        <i class="bx bx-money align-middle font-size-22 mr-2"></i>
+                                        مجموع مقدار
+                                    </th>
+                                    <td class="font-size-17">{{expense.exp_amount}} {{expense.price_unit}}</td>
+                                </tr>
+                                <tr>
+                                    <th class="font-size-18">
+                                        <i class="bx bx-money align-middle font-size-22 mr-2"></i>
+                                        مقدار پرداخت شده
+                                    </th>
+                                    <td class="font-size-17">{{expense.paid_amount}}</td>
+                                </tr>
+                                <tr>
+                                    <th class="font-size-18">
+                                        <i class="bx bx-money align-middle font-size-22 mr-2"></i>
+                                        مقدار باقی مانده
+                                    </th>
+                                    <td class="font-size-17">{{expense.remain_amount}}</td>
+                                </tr>
+                                <tr>
+                                    <th class="font-size-18">
+                                        <i class="bx bx-time align-middle font-size-22 mr-2"></i>
+                                        تاریخ مصرف
+                                    </th>
+                                    <td class="font-size-17">{{expense.exp_date|date:"Y-m-d"}}</td>
+                                </tr>
+                                <tr>
+                                    <th class="font-size-18">
+                                        <i class="bx bx-comment-dots align-middle font-size-22 mr-2"></i>
+                                        توضیحات مصرف
+                                    </th>
+                                    <td class="font-size-17">{{expense.exp_description}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script
+    src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"></script>
+    
+
+    
+
+    
+{% endblock content %}

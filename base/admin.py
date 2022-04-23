@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Customer, Category, Order, OrderDetail, Employee, Recieve, EmployeeType, EmployeeFee
+from .models import Customer, Category, Order, OrderDetail, Employee, Recieve, EmployeeType, EmployeeFee, ExpenseCategory, Expense
 # Register your models here.
 
 
@@ -11,3 +11,5 @@ admin.site.register(Employee)
 admin.site.register(Recieve)
 admin.site.register(EmployeeType)
 admin.site.register(EmployeeFee)
+admin.site.register(ExpenseCategory)
+admin.site.register(Expense)

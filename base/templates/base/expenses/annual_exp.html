@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load jalali_tags %}
+{% load widget_tweaks %}
+{% block title %}
+   لیست مصارف سال {{current_year_in_hijri}}
+{% endblock title %}
+
+{% block page_title %}
+لیست مصارف سال {{current_year_in_hijri}}
+{% endblock page_title %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
+    <li class="breadcrumb-item active">لیست مصارف سال {{current_year_in_hijri}}</li>
+</ol>
+{% endblock breadcrumb %}
+{% block content %}
+<!-- delete modal start -->
+<div class="modal fade" id="delete_expense" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title mt-0" id="delete-expense-modal-header"></h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'expense-delete' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="exp_id" id="exp-id">
+                    <p class="alert alert-danger text-center font-size-18">
+                        آیا میخواهید این مورد را از لیست مصارف خود حذف نمایید؟ 
+                    </p>
+                    <button class="btn btn-danger btn-lg mt-3">بلی، حذف</button>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- delete modal end -->
+<div class="row mb-2">
+    <div class="col-lg-10 m-auto">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h3 class="text-dark" style="font-weight:bold" >گزارشات کلی سال {{current_year_in_hijri}}</h3>
+                    </div>
+                    <div class="col-lg-6">
+                        <a href="{% url 'expense-list' %}" class="btn btn-dark btn-lg float-right mb-2">برگشت
+                            <i class="bx bx-left-arrow-alt align-middle font-size-20 "></i>
+                        </a>
+                        <a href="" class="btn btn-dark btn-lg float-right mb-2 mr-2">
+                            <i class="bx bx-download align-middle font-size-22"></i>
+                        </a>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    
+
+                    <div class="col-lg-12 align-self-center">
+                        <div class="text-lg-center mt-4 mt-lg-0">
+                            <div class="row">
+                                <div class="col-3">
+                                    <div>
+                                        <p style="font-weight: bold;" class="text-dark mb-2 font-size-20">مجموع مصارف</p>
+                                        <h4 class="mb-0 text-dark ">{{total}}</h4>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div>
+                                        <p class="text-dark font-size-20 mb-2" style="font-weight: bold;" >مقدار پرداخت شده</p>
+                                        <h4 class="mb-0 text-dark">{{paid_amount}}</h4>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div>
+                                        <p class="text-dark font-size-20 mb-2" style="font-weight: bold;" >باقی داری</p>
+                                        <h4 class="mb-0 text-dark">{{remain_amount}}</h4>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div>
+                                        <p class="text-dark font-size-20 mb-2" style="font-weight: bold;" >تناسب</p>
+                                        <h5 class="mb-0 text-dark">0.8% -</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="row">
+        <div class="col-lg-10 m-auto">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <h3 class="text-dark" style="font-weight: bold;">لیست مصارف سال {{current_year_in_hijri}}</h3>
+                        </div>
+                        <div class="col-lg-6">
+                            
+                        </div>
+                    </div>
+                    <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="text-center font-size-18">شماره</th>
+                                    <th class="text-center font-size-18">عنوان مصرف</th>
+                                    <th class="text-center font-size-18">مقدار مصرف</th>
+                                    <th class="text-center font-size-18">واحد پولی</th>
+                                    <th class="text-center font-size-18">تاریخ مصرف</th>
+                                    <th class="text-center font-size-18">عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for exp in expenses %}
+                                    <tr>
+                                        <td class="font-size-17 text-center">{{forloop.counter}}</td>
+                                        <td class="font-size-17 text-center">{{exp.category.category_name}}</td>
+                                        <td class="font-size-17 text-center">{{exp.exp_amount}}</td>
+                                        <td class="font-size-17 text-center">{{exp.price_unit}}</td>
+                                        <td class="font-size-17 text-center">{{exp.exp_date|date:"Y-m-d"}}</td>
+                                        <td class="font-size-17 text-center">
+                                            <button
+                                            data-toggle="modal"
+                                            data-target="#delete_expense"
+                                            data-id="{{exp.id}}"
+                                            data-category="{{exp.category.category_name}}"
+                                            class="btn btn-outline-danger delete-btns">
+                                                <i class="bx bx-trash align-middle font-size-20"></i>
+                                            </button>
+                                            <a href="{% url 'expense-detail' exp.id %}" class="btn btn-outline-primary">
+                                                <i class="bx bx-dots-horizontal-rounded align-middle font-size-20 "></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <p class="alert alert-info text-center font-size-18">
+                                        شما تا هنوز مصرفی را ثبت نکرده اید.
+                                    </p>
+                                {% endfor %}
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <script
+    src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"></script>
+    
+
+    <script type="text/javascript">
+        const btns = [...document.getElementsByClassName("delete-btns")]
+        const header = document.getElementById("delete-expense-modal-header")
+        const item = document.getElementById("exp-id")
+        btns.forEach(btn => btn.addEventListener("click", () => {
+            const id = btn.getAttribute("data-id")
+            const title = btn.getAttribute("data-category")
+            header.innerHTML = `
+                حذف مصرف  ${title}؟
+            `
+            item.value = id
+
+        }))
+      </script>
+
+    
+{% endblock content %}

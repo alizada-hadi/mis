@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
+{% load jalali_tags %}
 {% block title %}
    جزییات کارمند
 {% endblock title %}
@@ -86,7 +87,7 @@
                                     <td class="font-size-16 text-center">{{work.total_amount}}</td>
                                     <td class="font-size-16 text-center">{{work.get_amount}}</td>
                                     <td class="font-size-16 text-center">{{work.remain_amount}}</td>
-                                    <td class="font-size-16 text-center">{{work.updated_at|date:"Y-M-d: H:i:s"}}</td>
+                                    <td class="font-size-16 text-center">{{work.updated_at|to_jalali:"%Y/%m/%d _ %H:%M:%S"}}</td>
                                     <td class="font-size-16 text-center">
                                         {% if work.get_amount == work.total_amount %}
                                         <button class="btn btn-outline-success">پرداخت شد</button>

@@ -37,11 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'base.apps.BaseConfig',
-
     # 3rd party apps
     'jalali_date',
-    'widget_tweaks'
+    'widget_tweaks',
+    'base.apps.BaseConfig',
+
+    
 ]
 
 JALALI_DATE_DEFAULTS = {

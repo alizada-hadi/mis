@@ -1,5 +1,6 @@
 from decimal import Decimal
 import sre_compile
+from unittest.util import _MAX_LENGTH
 from django.db import models
 # Create your models here.
 
@@ -138,3 +139,50 @@ class EmployeeFee(models.Model):
 
         super().save(*args, **kwargs)
 
+
+
+# expense and income
+class ExpenseCategory(models.Model):
+    category_name = models.CharField(max_length=200)
+
+    def __str__(self) -> str:
+        return self.category_name
+
+class Expense(models.Model):
+    PRICE_UNIT = (
+        ("افغانی", "افغانی"), 
+        ("دالر",  "دالر"),
+        ("کلدار",  "کلدار"),
+        ("تومان",  "تومان"),
+    )
+    category = models.ForeignKey(ExpenseCategory, on_delete=models.SET_NULL, null=True)
+    good_name = models.CharField(max_length=200, null=True, blank=True)
+    rant_month = models.DateField(null=True, blank=True)
+    from_place = models.CharField(max_length=200, null=True, blank=True)
+    to_place = models.CharField(max_length=200, null=True, blank=True)
+    exp_quantity =  models.DecimalField(max_digits=8, decimal_places=2, default=1)
+    exp_amount = models.DecimalField(max_digits=8, decimal_places=2, default=0)
+    price_unit = models.CharField(max_length=20, choices=PRICE_UNIT, default="افغانی")
+    alternative = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    exp_date = models.DateField()
+    exp_description = models.TextField(null=True, blank=True)
+
+    total = models.DecimalField(max_digits=8, decimal_places=2, default=0)
+    paid_amount = models.DecimalField(max_digits=8, decimal_places=2, default=0)
+    remain_amount = models.DecimalField(max_digits=8, decimal_places=2, default=0)
+
+
+    def __str__(self) -> str:
+        return f"{self.category} expense "
+
+    def save(self, *args, **kwargs):
+        if not self.total:
+            self.total = self.exp_quantity * (self.exp_amount * self.alternative)
+        if not self.remain_amount:
+            self.remain_amount = self.total - self.paid_amount
+    
+        super().save(*args, **kwargs)
+
+
+class Income(models.Model):
+    pass
