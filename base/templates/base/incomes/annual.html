@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load income_tags %}
+{% block title %}
+    لیست درامد
+{% endblock title %}
+
+{% block page_title %}
+لیست درآمد امسال {{current_year}}
+{% endblock page_title %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
+    <li class="breadcrumb-item active">لیست درآمد امسال {{current_year}}</li>
+</ol>
+{% endblock breadcrumb %}
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-3">
+            
+        </div>
+        <div class="col-lg-9">
+            <div class="card">
+                <div class="card-body">
+                    <div class="col-lg-12 align-self-center">
+                        <div class="text-lg-center mt-4 mt-lg-0">
+                            <div class="row">
+                                <div class="col-3">
+                                    <div>
+                                        <p style="font-weight: bold;" class="text-dark mb-2 font-size-20">درآمد امسال</p>
+                                        <h4 class="mb-0 text-dark ">{% annual_total_income current_year %}</h4>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div>
+                                        <p class="text-dark font-size-20 mb-2" style="font-weight: bold;" >درآمد سال گذشته</p>
+                                        <h4 class="mb-0 text-dark">{% annual_total_income last_year %}</h4>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div>
+                                        <p class="text-dark font-size-20 mb-2" style="font-weight: bold;" >تفاوت</p>
+                                        <h4 class="mb-0 text-dark" dir="ltr">{% income_ratio current_year last_year %} %</h4>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div>
+                                        <p class="text-dark font-size-20 mb-2" style="font-weight: bold;" >نسبت به مصرف امسال</p>
+                                        <h5 class="mb-0 text-dark font-size-20 " dir="ltr">{% income_expense_comparision current_year %}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        {% include 'components/report.html' %}
+        <div class="col-lg-9">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-lg-6">
+                            <h3 class="text-dark" style="font-weight: bold;">لیست درآمد امسال {{current_year}}</h3>
+                        </div>
+                        <div class="col-lg-6">
+                            <a href="{% url 'income-list' %}" class="float-right btn btn-light btn-lg">برگشت <i class="bx bx-left-arrow-alt align-middle font-size-24"></i></a>
+                        </div>
+                    </div>
+                    <!--  -->
+                    <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="text-center font-size-18">شماره</th>
+                                    <th class="text-center font-size-18">عنوان درامد</th>
+                                    <th class="text-center font-size-18">مقدار</th>
+                                    <th class="text-center font-size-18">واحد پول</th>
+                                    <th class="text-center font-size-18">تاریخ ثبت</th>
+                                    <th class="text-center font-size-18">عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for income in incomes %}
+                                    <tr>
+                                        <td class="font-size-17 text-center">{{forloop.counter}}</td>
+                                        <td class="font-size-17 text-center">{{income.income_title}}</td>
+                                        <td class="font-size-17 text-center">{{income.amount}}</td>
+                                        <td class="font-size-17 text-center">{{income.price_unit}}</td>
+                                        <td class="font-size-17 text-center">{{income.recieved_at|date:"Y-m-d"}}</td>
+                                        <td class="font-size-17 text-center">
+                                            <button class="btn btn-outline-danger">
+                                                <i class="bx bx-trash align-middle font-size-22 "></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <script
+    src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"></script>
+     
+
+{% endblock content %}

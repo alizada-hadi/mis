@@ -1,8 +1,10 @@
 from decimal import Decimal
 from django.shortcuts import redirect, render
-from base.models import Employee, EmployeeFee, EmployeeType, OrderDetail
+from base.models import Employee, EmployeeFee, EmployeeType, OrderDetail, Expense, ExpenseCategory
 from django.contrib import messages
 from base.forms.employee_forms import EmployeeForm
+from datetime import datetime
+from jalali_date import date2jalali, datetime2jalali
 
 # employee list
 def employee_list(request):
@@ -101,11 +103,23 @@ def employee_detail_view(request, pk):
 
 # employee get salary
 def employee_get_salary_view(request):
+    now = datetime.now()
+    # get it in hijri
+    hijri = date2jalali(now).strftime("%Y-%m-%d")
     if request.method == "POST":
         ef = EmployeeFee.objects.get(pk=request.POST.get("employee_fee"))
         amount = request.POST.get("amount")
-
+        category = ExpenseCategory.objects.get(category_name="معاشات کارمندان")
         try:
+            Expense.objects.create(
+                category = category,
+                exp_amount = Decimal(amount),
+                exp_date = hijri, 
+                exp_quantity = Decimal(1),
+                alternative = Decimal(1),
+                paid_amount = Decimal(amount), 
+                price_unit = "افغانی"
+            )
             ef.get_amount += Decimal(amount)
             ef.remain_amount = Decimal(ef.remain_amount) - Decimal(amount)
             ef.save()

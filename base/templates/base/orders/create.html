@@ -1,6 +1,6 @@
 
 {% extends 'base.html' %}
-
+{% load jalali_tags %}
 {% block title %}
     ثبت فرمایش 
 {% endblock title %}
@@ -37,7 +37,7 @@
                         <select name="order" class="form-control form-control-lg" id="">
                             <option value="">-----</option>
                             {% for order in orders %}
-                                <option value="{{order.id}}">{{order.date_ordered|date:"Y-M-d"}}</option>
+                                <option value="{{order.id}}">{{order.date_ordered|to_jalali:"%Y-%m-%d"}}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -51,7 +51,7 @@
                     </div>
                     <div class="mt-2">
                         <label for="" class="font-size-18">تاریخ دریافت</label>
-                        <input type="date" class="form-control form-control-lg"  name="recieve_date">
+                        <input type="text" id="recieve_datepicker" class="form-control form-control-lg"  name="recieve_date">
                     </div>
                     <button class="btn btn-lg btn-light mt-4">ذخیره کردن</button>
                 </form>
@@ -112,7 +112,7 @@
                                     <div class="col-3">
                                         <div>
                                             <p class="text-dark mb-2 font-size-20" style="font-weight: bold;">آخرین دریافت</p>
-                                            <h5 class="mb-0">{{last_recieved_at.recived_at|date:"Y-M-j"}}</h5>
+                                            <h5 class="mb-0">{{last_recieved_at.recived_at|date:"Y-m-d"}}</h5>
                                             
                                         </div>
                                     </div>
@@ -197,5 +197,22 @@
         </div>
     </div>
 
+    <script
+    src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"></script>
+    <script>
+        // recieve_datepicker
+        $(document).ready(function() {
+            $("#recieve_datepicker").pDatepicker({
+                format: 'YYYY-MM-DD',
+            calendar:{
+                persian: {
+                    locale: 'fa'
+                }
+            }
+            })
+        })
+    </script>
 
 {% endblock content %}

@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load jalali_tags %}
 {% block title %}
     لیست مشتریان
 {% endblock title %}
@@ -170,7 +170,7 @@
                                         <td class="font-size-17 text-center">{{customer.phone_number}}</td>
                                         <td class="font-size-17 text-center">{{customer.social_number}}</td>
                                         <td class="font-size-17 text-center">{{customer.address}}</td>
-                                        <td class="font-size-17 text-center">{{customer.created_at|date:"Y-l-d"}}</td>
+                                        <td class="font-size-17 text-center">{{customer.created_at|to_jalali:"%Y-%m-%d"}}</td>
                                         <td>
                                             <button 
                                             data-toggle="modal"

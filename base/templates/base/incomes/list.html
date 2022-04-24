@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    لیست درامد
+{% endblock title %}
+
+{% block page_title %}
+لیست درامد
+{% endblock page_title %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
+    <li class="breadcrumb-item active">لیست درامد</li>
+</ol>
+{% endblock breadcrumb %}
+{% block content %}
+
+<style>
+    #alternative{
+        display: none;
+    }
+</style>
+
+<!-- delete modal start -->
+<div class="modal fade" id="add-income" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title mt-0" id="delete-employee-modal-header">ثبت درآمد جدید</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'income-create' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label for="" class="font-size-18">عنوان درآمد</label>
+                            <input type="text" class="form-control form-control-lg" placeholder="فروش ..." name="title">
+                        </div>
+                        <div class="col-lg-6">
+                            <label for="" class="font-size-18">مقدار پول</label>
+                            <input type="number" class="form-control form-control-lg" name="amount">
+                        </div>
+                        <div class="col-lg-6 mt-2">
+                            <label for="" class="font-size-18">واحد پول</label>
+                            <select name="unit" class="form-control form-control-lg" id="unit">
+                                <option value="afg">افغانی</option>
+                                <option value="usd">دالر</option>
+                                <option value="kaldar">کلدار</option>
+                                <option value="toman">تومن</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-6 mt-2" id="alternative">
+                            <label for="" class="font-size-18">معادل به افغانی</label>
+                            <input type="number" class="form-control form-control-lg" name="alternative">
+                        </div>
+
+                        <div class="col-lg-6 mt-2">
+                            <label for="" class="font-size-18">تاریخ</label>
+                            <input type="text" id="income_datepicker" class="form-control form-control-lg" name="date">
+                        </div>
+
+                    </div>
+
+                    <button class="btn btn-dark btn-lg mt-3">ذخیره کردن</button>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- delete modal end -->
+    <div class="row">
+        {% include 'components/report.html' %}
+        <div class="col-lg-9">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-lg-6">
+                            <h3 class="text-dark" style="font-weight: bold;">لیست درامد</h3>
+                        </div>
+                        <div class="col-lg-6">
+                            <button 
+                            data-target="#add-income"
+                            data-toggle="modal"
+                            class="float-right btn btn-light btn-lg">ثبت مورد جدید <i class="bx bx-plus align-middle font-size-24"></i></button>
+                        </div>
+                    </div>
+                    <!--  -->
+                    <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="text-center font-size-18">شماره</th>
+                                    <th class="text-center font-size-18">عنوان درامد</th>
+                                    <th class="text-center font-size-18">مقدار</th>
+                                    <th class="text-center font-size-18">واحد پول</th>
+                                    <th class="text-center font-size-18">تاریخ ثبت</th>
+                                    <th class="text-center font-size-18">عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for income in incomes %}
+                                    <tr>
+                                        <td class="font-size-17 text-center">{{forloop.counter}}</td>
+                                        <td class="font-size-17 text-center">{{income.income_title}}</td>
+                                        <td class="font-size-17 text-center">{{income.amount}}</td>
+                                        <td class="font-size-17 text-center">{{income.price_unit}}</td>
+                                        <td class="font-size-17 text-center">{{income.recieved_at|date:"Y-m-d"}}</td>
+                                        <td class="font-size-17 text-center">
+                                            <button class="btn btn-outline-danger">
+                                                <i class="bx bx-trash align-middle font-size-22 "></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <script
+    src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+            $("#unit").change(function(){
+                var val = $(this).val()
+                if (val != "afg"){
+                    $("#alternative").show()
+                }
+                else{
+                    $("#alternative").hide()
+                }
+            })
+
+            $("#income_datepicker").pDatepicker({
+                format: 'YYYY-MM-DD',
+            calendar:{
+                persian: {
+                    locale: 'fa'
+                }
+            }
+            })
+        })
+    </script>  
+
+{% endblock content %}

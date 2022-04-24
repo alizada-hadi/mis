@@ -185,4 +185,25 @@ class Expense(models.Model):
 
 
 class Income(models.Model):
-    pass
+    PRICE_UNIT = (
+        ("افغانی", "افغانی"), 
+        ("دالر",  "دالر"),
+        ("کلدار",  "کلدار"),
+        ("تومان",  "تومان"),
+    )
+    income_title = models.CharField(max_length=200)
+    amount = models.DecimalField(max_digits=8, decimal_places=2, default=0)
+    price_unit = models.CharField(max_length=20, choices=PRICE_UNIT, default="افغانی")
+    alternative = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    total = models.DecimalField(max_digits=8, decimal_places=2, default=0)
+    recieved_at = models.DateField()
+    
+    def __str__(self) -> str:
+        return self.income_title
+
+    def save(self, *args, **kwargs):
+        if not self.total:
+            self.total = self.amount * self.alternative
+        super().save(*args, **kwargs)
+
+
