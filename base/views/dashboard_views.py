@@ -25,6 +25,10 @@ def dashboard(request):
         data["expense"].append(int(exp.total))
         data["date"].append(exp.exp_date.strftime("%Y-%m-%d"))
 
+    for i in incomes:
+        data["income"].append(int(i.total))
+        data["date"].append(i.recieved_at.strftime("%Y-%m-%d"))
+    
     for i in range(1, 13):
         order_data['number_of_order'].append(Order.objects.filter(date_ordered__month=i).count())
         if i == 1:
@@ -51,11 +55,6 @@ def dashboard(request):
             order_data['month'].append("دلو")
         elif i == 12:
             order_data['month'].append("حوت")
-        
-
-    for i in incomes:
-        data["income"].append(int(i.total))
-        data["date"].append(i.recieved_at.strftime("%Y-%m-%d"))
     context = {
         "current_year" : current_year, 
         "labels" : labels, 
