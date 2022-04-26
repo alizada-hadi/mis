@@ -1,0 +1,269 @@
+{% extends 'base.html' %}
+{% load expense_tags %}
+{% block title %}
+صفحه اصلی
+{% endblock title %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
+    <li class="breadcrumb-item active">صفحه اصلی</li>
+</ol>
+{% endblock breadcrumb %}
+
+{% block page_title %}
+صفحه اصلی
+{% endblock page_title %}
+
+{% block content %}
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="row">
+            <div class="col-sm-3 col-lg-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="avatar-xs mr-3">
+                                <span class="avatar-title rounded-circle bg-soft-primary text-primary font-size-18">
+                                    <i class="bx bx-copy-alt"></i>
+                                </span>
+                            </div>
+                            <h3 class="font-size-18 mb-0">مجموع مصارف امسال</h3>
+                        </div>
+                        <div class="text-muted mt-4">
+                            <h4>{% annual_total_expense current_year %}<i class="mdi mdi-chevron-up ml-1 text-success"></i></h4>
+                            <div class="d-flex">
+                                <span class="badge badge-soft-success font-size-12"> + 0.2% </span> <span class="ml-2 text-truncate">نسبت به سال گذشته</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-3 col-lg-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="avatar-xs mr-3">
+                                <span class="avatar-title rounded-circle bg-soft-primary text-primary font-size-18">
+                                    <i class="bx bx-archive-in"></i>
+                                </span>
+                            </div>
+                            <h5 class="font-size-18 mb-0">مجموع درآمد امسال</h5>
+                        </div>
+                        <div class="text-muted mt-4">
+                            <h4>{% annual_total_income current_year %} <i class="mdi mdi-chevron-up ml-1 text-success"></i></h4>
+                            <div class="d-flex">
+                                <span class="badge badge-soft-success font-size-12"> + 0.2% </span> <span class="ml-2 text-truncate">نسبت به سال گذشته</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-3 col-lg-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="avatar-xs mr-3">
+                                <span class="avatar-title rounded-circle bg-soft-primary text-primary font-size-18">
+                                    <i class="mdi mdi-order-bool-ascending-variant align-items-center "></i>
+                                </span>
+                            </div>
+                            <h5 class="font-size-18 mb-0">تعداد فرمایشات امسال</h5>
+                        </div>
+                        <div class="text-muted mt-4">
+                            <h4>{% annual_total_order current_year %}<i class="mdi mdi-chevron-up ml-1 text-success"></i></h4>
+                            
+                            <div class="d-flex">
+                                <span class="badge badge-soft-warning font-size-12"> 0% </span> <span class="ml-2 text-truncate">نسبت به سال گذشته</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3 col-lg-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="avatar-xs mr-3">
+                                <span class="avatar-title rounded-circle bg-soft-primary text-primary font-size-18">
+                                    <i class="mdi mdi-account-group-outline"></i>
+                                </span>
+                            </div>
+                            <h5 class="font-size-18 mb-0">تعداد کارمندان</h5>
+                        </div>
+                        <div class="text-muted mt-4">
+                            <h4>{% number_of_employees %} <i class="mdi mdi-chevron-up ml-1 text-success"></i></h4>
+                            
+                            <div class="d-flex">
+                                <span class="badge badge-soft-warning font-size-12"> 0% </span> <span class="ml-2 text-truncate">نسبت به سال گذشته</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end row -->
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="text-dark" style="font-weight: bold;">گراف نشان دهنده تعداد فرمایشات در هر ماه</h3>
+                <canvas id="order-chart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="text-dark" style="font-weight: bold;">گراف درآمد و مصارف سال</h3>
+                <canvas id="expense-chart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function comparePeriods() {
+        var ctx = $("#expense-chart");
+        this.chartCompare = new Chart(ctx, {
+            
+            type: 'line',
+            data: {
+                labels: {{data.date|safe}},
+                datasets: [{
+                    type: 'line',
+                    borderColor: "#2793DB",
+                    label: 'درآمد امسال',
+                    data: {{data.income|safe}},
+                    borderWidth: 3,
+                    xAxisID: "x-axis-1",
+                },
+                {
+                    type: 'line',
+                    borderColor: "#E25F5F",
+                    label: 'مصارف امسال',
+                    data: {{data.expense|safe}},
+                    borderWidth: 3,
+                    xAxisID: "x-axis-2",   
+                },
+                ]
+            },
+            options: {
+                tooltips: {
+                    mode: 'index',
+                    intersect: true
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        tipe: "time",
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'گراف مصارف و درآمد امسال'
+                        },
+                        time: {
+                        displayFormats: {
+                            'day': 'MMM DD',
+                            'week': 'MMM DD',
+                            'month': 'MMM DD',
+                            'quarter': 'MMM DD',
+                            'year': 'MMM DD',
+                        }
+                        },
+                        id: "x-axis-1",
+                        ticks:{
+                            callback:function(label) {
+
+                            var label = label.split("#")[0];
+                            return label;
+
+                            }
+                        }
+                        },
+                        {
+                        display: true,
+                        tipe: "time",
+                        id: "x-axis-2",
+                        scaleLabel: {
+                            display: true,
+                            labelString: ''          
+                    }, 
+                    id: "x-axis-2",
+                    ticks:{
+                            callback:function(label) {
+                            var label = label.split("#")[1];
+                            return label;
+
+                            }
+                        }
+                }
+
+                    ],
+                    yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'مجموع'
+                    },
+                    ticks: {
+                        callback: function(value, index, values) {
+
+                            return value.toLocaleString("de-DE",{style:"currency", currency:"AFG"});
+
+                        }
+                    }
+                    }]
+                }
+            }
+
+        });
+      
+          }
+        
+    comparePeriods();
+
+
+    // show number of order in each month
+    var config = {
+        type : "line", 
+        data : {
+            datasets : [{
+                data : {{order_data.number_of_order|safe}},
+                label : "تعداد فرمایشات",
+                lineTension:0.3,
+                backgroundColor : "rgba(78,115,223,0.05)",
+                borderColor: "rgba(78,115,223,1)",
+                borderRadius : 3,
+                pointBackgroundColor : "rgba(78,115,223,1)",
+                pointBorderColor : "rgba(78,115,223,1)",
+                pointHoverRadius : 3,
+                pointBackgroundHoverColor : "rgba(78,115,223,1)",
+                pointHoverBorderColor : "rgba(78,115,223,1)",
+                pointHitRadius : 10, 
+                pointBorderWidth : 2,
+            }], 
+            labels : {{order_data.month|safe}},
+        },
+        options: {
+        responsive: true
+      },
+    }
+
+    window.onload = function(){
+        var ctx = document.getElementById("order-chart").getContext("2d")
+        window.myChart = new Chart(ctx, config)
+    }
+
+</script>
+
+{% endblock content %}

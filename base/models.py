@@ -57,7 +57,7 @@ class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     paid_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="مقدار پرداخت شده", null=True, blank=True)
     total_amount = models.DecimalField(max_digits=8, decimal_places=2, default=0)
-    date_ordered = models.DateTimeField(auto_now_add=True)
+    date_ordered = models.DateField()
 
 
     def __str__(self):

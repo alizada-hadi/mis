@@ -5,8 +5,10 @@ from weasyprint import HTML
 import tempfile
 from django.contrib import messages
 
-from base.models import Category, Customer, EmployeeFee, Order, OrderDetail, Employee, Recieve
+from base.models import Category, Customer, EmployeeFee, Order, OrderDetail, Employee, Recieve, Income
 from decimal import Decimal
+from datetime import datetime
+from jalali_date import date2jalali
 
 # recieve money
 
@@ -23,7 +25,17 @@ def recieve_view(request):
             amount_letter=amount_letter, 
             recived_at=recieved_date
         )
+        title = f"دریافت پول از {order.customer.first_name} - {order.customer.last_name}"
+        price_unit = "افغانی"
+        alternative = Decimal(1)
         if obj:
+            Income.objects.create(
+                income_title = title, 
+                amount = Decimal(amount),
+                price_unit=price_unit, 
+                alternative=alternative, 
+                recieved_at=recieved_date
+            )
             order.total_amount = order.total_amount - (Decimal(amount) + Decimal(order.paid_amount))
             order.save()
             messages.success(request, f"شما به مقدار {amount} افغانی دریافت کردید. ")
@@ -37,6 +49,8 @@ def recieve_view(request):
 def order_create_view(request, pk):
     customer = Customer.objects.get(pk=pk)
     orders = customer.order_set.all()
+    now = datetime.now()
+    date_in_hijri = date2jalali(now).strftime("%Y-%m-%d")
     # total 
     total = 0
     get_amount_per_order = 0
@@ -61,7 +75,8 @@ def order_create_view(request, pk):
         order = Order.objects.create(
             customer=customer,
             paid_amount = 0,
-            total_amount = 0 
+            total_amount = 0, 
+            date_ordered = date_in_hijri
         )
         if order:
             messages.success(request, "فرمایش جدید موفقانه ثبت گردید.")
@@ -87,7 +102,17 @@ def order_update_view(request, pk):
     if request.method == "POST":
         customer = Customer.objects.get(pk=request.POST.get("customer"))
         amount = request.POST.get("pre_paid")
+        title = f"دریافت بیانه از {order.customer.first_name} {order.customer.last_name}"
+        now = datetime.now()
+        date_in_hijri = date2jalali(now).strftime("%Y-%m-%d")
         try:
+            Income.objects.create(
+                income_title = title, 
+                amount=Decimal(amount), 
+                recieved_at=date_in_hijri, 
+                alternative=Decimal(1), 
+                price_unit="افغانی"
+            )
             order.customer=customer
             order.paid_amount=amount
             order.save()
