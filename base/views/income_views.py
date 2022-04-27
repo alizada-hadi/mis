@@ -6,7 +6,11 @@ from datetime import datetime
 from jalali_date import date2jalali
 import datetime as custom_time
 import math
+from django.contrib.auth.decorators import login_required
+from users.decorators import allowed_groups
 # income list
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def income_list_view(request):
     object_list = Income.objects.all()
 
@@ -17,6 +21,8 @@ def income_list_view(request):
 
 
 # create income
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def income_create_view(request):
     if request.method == "POST":
         title = request.POST.get("title")
@@ -50,6 +56,8 @@ def income_create_view(request):
 
 
 # filter the income based on year, month, week, and day
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def income_annual_report(request):
     # first, get the date
     now = datetime.now()
@@ -67,6 +75,8 @@ def income_annual_report(request):
     return render(request, "base/incomes/annual.html", context)
 
 
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def monthly_income_report(request):
     now = datetime.now()
     current_month = date2jalali(now).strftime("%m")
@@ -83,7 +93,8 @@ def monthly_income_report(request):
     }
     return render(request, "base/incomes/monthly.html", context)
 
-
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def weekly_income_report(request):
     now = datetime.now()
     month = date2jalali(now).month
@@ -100,7 +111,8 @@ def weekly_income_report(request):
 
     return render(request, "base/incomes/weekly.html", context)
 
-
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def daily_income_report(request):
     now = datetime.now()
     day = date2jalali(now).day

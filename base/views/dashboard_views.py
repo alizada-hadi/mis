@@ -3,8 +3,11 @@ from base.models import *
 from django.contrib import messages
 from datetime import datetime
 from jalali_date import date2jalali
+from users.decorators import allowed_groups
+from django.contrib.auth.decorators import login_required
 
-
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def dashboard(request):
     labels = []
     data = {

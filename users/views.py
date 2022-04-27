@@ -4,10 +4,12 @@ from django.contrib.auth.models import Group, User
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
-from . import decorators
+from .decorators import allowed_groups
+from django.contrib.auth.decorators import login_required
 # register new user
 
-@decorators.allowed_groups(groups=["superadmin"])
+@allowed_groups(groups=["superadmin", "admin"])
+@login_required(login_url="login")
 def user_register_view(request):
     if request.method == "POST":
         email = request.POST.get("email")

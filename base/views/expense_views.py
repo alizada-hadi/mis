@@ -7,8 +7,12 @@ from jalali_date import datetime2jalali, date2jalali
 from datetime import datetime
 import math
 import datetime as my_time
+from users.decorators import allowed_groups
+from django.contrib.auth.decorators import login_required
 
 # list expenses
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def expense_list_view(request):
     expenses = Expense.objects.all()
     context = {
@@ -19,6 +23,8 @@ def expense_list_view(request):
 
 
 # create new expenses
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def create_expense_view(request):
     categorires = ExpenseCategory.objects.all()
     if request.method == "POST":
@@ -72,6 +78,8 @@ def create_expense_view(request):
 
 
 # delete expense item view
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def delete_expense_view(request):
     if request.method == "POST":
         expense = Expense.objects.get(pk=request.POST.get("exp_id"))
@@ -84,7 +92,8 @@ def delete_expense_view(request):
 
 
 # expense detail and generate pdf file
-
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def expense_detail_view(request, pk):
     expense = Expense.objects.get(pk=pk)
     context = {
@@ -95,6 +104,8 @@ def expense_detail_view(request, pk):
 
 
 # annual expenses
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def annual_expense_view(request):
     # expenses = Expense.objects.filter(exp_date="")
     # convert year from miladi to hijri
@@ -146,6 +157,8 @@ def annual_expense_view(request):
 
 
 # monthly expenses
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def monthly_expenses_view(request):
     # first get the full current date and time
     now = datetime.now()
@@ -225,7 +238,8 @@ def monthly_expenses_view(request):
 
 
 # weekly expenses report
-
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def weekly_expenses_view(request):
     # first, get the current date and time
     now = datetime.now()
@@ -280,6 +294,8 @@ def weekly_expenses_view(request):
 
 
 # get today's expenses
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def today_expense_view(request):
     # get the current date
     now = datetime.now()

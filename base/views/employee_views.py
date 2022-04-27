@@ -5,8 +5,13 @@ from django.contrib import messages
 from base.forms.employee_forms import EmployeeForm
 from datetime import datetime
 from jalali_date import date2jalali, datetime2jalali
+from users.decorators import allowed_groups
+from django.contrib.auth.decorators import login_required
+
 
 # employee list
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def employee_list(request):
     employees = Employee.objects.all()
 
@@ -17,6 +22,8 @@ def employee_list(request):
 
 
 # create employee
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def create_employee_view(request):
 
     if request.method == 'POST':
@@ -56,7 +63,8 @@ def create_employee_view(request):
     return render(request, "base/employees/create.html")
 
 # update employee
-
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def employee_update_view(request, pk):
     employee = Employee.objects.get(pk=pk)
     if request.method == "POST":
@@ -75,6 +83,8 @@ def employee_update_view(request, pk):
 
 
 # delete employee
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def employee_delete_view(request):
     if request.method == "POST":
         emp = Employee.objects.get(id=request.POST.get("employee"))
@@ -88,7 +98,8 @@ def employee_delete_view(request):
 
 
 # employee detail
-
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def employee_detail_view(request, pk):
     employee = Employee.objects.get(pk=pk)
     works = employee.employeefee_set.all()
@@ -102,6 +113,8 @@ def employee_detail_view(request, pk):
 
 
 # employee get salary
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def employee_get_salary_view(request):
     now = datetime.now()
     # get it in hijri

@@ -12,5 +12,6 @@ urlpatterns = [
     path("order/<str:pk>/customer/pdf/", order_views.customer_generate_pdf, name="customer-order-pdf"), 
     path("recieve/create/", order_views.recieve_view, name="add-recieve"), 
     path("recieve/<str:pk>/list/", order_views.recieve_list_view, name="recieve-list"), 
-    path("order_detail/<str:pk>/add_employee/", order_views.employee_work_view, name="add-employee")
+    path("order_detail/<str:pk>/add_employee/", order_views.employee_work_view, name="add-employee"), 
+    path("order/delete/", order_views.order_delete_view, name="order-delete")
 ]

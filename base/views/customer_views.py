@@ -1,9 +1,13 @@
 from django.shortcuts import redirect, render
 from base.models import Customer
 from django.contrib import messages
+from users.decorators import allowed_groups
+from django.contrib.auth.decorators import login_required
 
 
 # customer list
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def customer_list_view(request):
     customers = Customer.objects.all()
     context = {
@@ -14,7 +18,8 @@ def customer_list_view(request):
 
 
 # create new customer
-
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def customer_create_view(request):
     if request.method == "POST":
         name = request.POST.get("first_name")
@@ -36,7 +41,8 @@ def customer_create_view(request):
             messages.error(request, "مشکلی رخ داد، لطفا دوباره تلاش کنید.")
         return redirect("customer-list")
 
-
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def update_customer(request):
     if request.method == "POST":
         customer = Customer.objects.get(pk=request.POST.get("customer"))
@@ -61,6 +67,8 @@ def update_customer(request):
 
 
 # delete customer
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def customer_delete_view(request):
     if request.method == "POST":
         customer = Customer.objects.get(pk = request.POST.get("customer"))

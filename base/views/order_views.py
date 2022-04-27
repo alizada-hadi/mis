@@ -9,9 +9,12 @@ from base.models import Category, Customer, EmployeeFee, Order, OrderDetail, Emp
 from decimal import Decimal
 from datetime import datetime
 from jalali_date import date2jalali
+from django.contrib.auth.decorators import login_required
+from users.decorators import allowed_groups
 
 # recieve money
-
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def recieve_view(request):
     if request.method == "POST":
         order = Order.objects.get(id=request.POST.get("order"))
@@ -46,6 +49,8 @@ def recieve_view(request):
 
 
 # create new order
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def order_create_view(request, pk):
     customer = Customer.objects.get(pk=pk)
     orders = customer.order_set.all()
@@ -97,6 +102,8 @@ def order_create_view(request, pk):
 
 
 # update order
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def order_update_view(request, pk):
     order = Order.objects.get(pk=pk)
     if request.method == "POST":
@@ -123,7 +130,23 @@ def order_update_view(request, pk):
             return redirect("order-detail", order.id)
 
 
+
+# delete order
+def order_delete_view(request):
+    if request.method == "POST":
+        order = Order.objects.get(pk=request.POST.get("order_id"))
+        try:
+            order.delete()
+            messages.success(request, "فرمایش شما موفقانه از سیستم حذف گردید. ")
+            return redirect("create-order", order.customer.id)
+        except:
+            messages.error(request, "مشکلی رخ داد، لطفا دوباره تلاش کنید. ")
+            return redirect("create-order", order.customer.id)
+
+
 # order detail
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def order_detail_view(request, pk):
     categories = Category.objects.all()
     order = Order.objects.get(pk=pk)
@@ -206,6 +229,8 @@ def order_detail_view(request, pk):
     }
     return render(request, "base/orders/create_detail.html", context)
 
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def employee_generate_pdf(request, pk):
     order = Order.objects.get(pk=pk)
     items = order.orderdetail_set.all()
@@ -234,7 +259,8 @@ def employee_generate_pdf(request, pk):
     return response
 
 
-
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def customer_generate_pdf(request, pk):
     order = Order.objects.get(pk=pk)
     items = order.orderdetail_set.all()
@@ -273,6 +299,8 @@ def customer_generate_pdf(request, pk):
 
 
 # recieve list
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def recieve_list_view(request, pk):
     customer = get_object_or_404(Customer, pk=pk)
     orders = customer.order_set.all()
@@ -293,7 +321,8 @@ def recieve_list_view(request, pk):
 
 
 # specify which employees work on a specific order_detail
-
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
 def employee_work_view(request, pk):
     order_detail = OrderDetail.objects.get(pk=pk)
     order = order_detail.order
