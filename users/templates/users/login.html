@@ -1,0 +1,30 @@
+{% extends 'authentication/main.html' %}
+
+{% block title %}
+    ورود به سیستم
+{% endblock title %}
+    {% block page_title %}
+    ورود به سیستم
+    {% endblock page_title %}
+{% block content %}
+
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="useremail" class="font-size-18">نام کاربری</label>
+                    <input type="text" class="form-control form-control-lg" name="username" placeholder="Enter email">        
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="useremail" class="font-size-18">رمز ورود</label>
+                    <input type="password" class="form-control form-control-lg" name="password" placeholder="Enter email">        
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-dark btn-lg">ورود به سیستم</button>
+    </form>
+
+{% endblock content %}

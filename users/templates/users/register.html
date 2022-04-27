@@ -1,0 +1,76 @@
+{% extends 'authentication/main.html' %}
+
+
+{% block title %}
+    ثبت کاربر جدید
+{% endblock title %}
+
+{% block page_title %}
+    ثبت کاربر جدید
+{% endblock page_title %}
+
+{% block content %}
+<form class="" action="" method="POST">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label for="useremail" class="font-size-18">آدرس ایمیل</label>
+                <input type="email" class="form-control form-control-lg" name="email" placeholder="Enter email">        
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label for="username" class="font-size-18">نام کاربری</label>
+                <input type="text" class="form-control form-control-lg" name="username" placeholder="Enter username">
+            </div>
+        </div>
+    </div>  
+    
+    <div class="row mt-2">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label for="username" class="font-size-18">نام</label>
+                <input type="text" class="form-control form-control-lg" name="firstname" placeholder="Enter username">
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label for="username" class="font-size-18">تخلص</label>
+                <input type="text" class="form-control form-control-lg" name="lastname" placeholder="Enter username">
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label for="userpassword" class="font-size-18">رمز ورود</label>
+                <input type="password" class="form-control form-control-lg" name="password" placeholder="Enter password">        
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label for="userpassword" class="font-size-18">تکرار رمز ورود</label>
+                <input type="password" class="form-control form-control-lg" name="repeat_password" placeholder="Enter password">        
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label for="" class="font-size-18">نوعیت کاربر</label>
+                <select name="group" class="form-control form-control-lg" id="">
+                    {% for group in groups %}
+                        <option value="{{group.name}}">{{group.name}}</option>
+                    {% endfor %}
+                </select>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-2">
+        <button class="btn btn-dark waves-effect waves-light btn-lg font-size-16 " type="submit">ثبت کردن</button>
+    </div>
+</form>
+{% endblock content %}

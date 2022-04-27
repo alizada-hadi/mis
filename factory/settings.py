@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     # 3rd party apps
     'jalali_date',
     'widget_tweaks',
+    # custom apps
     'base.apps.BaseConfig',
+    'users.apps.UsersConfig',
 
     
 ]

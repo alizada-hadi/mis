@@ -10,4 +10,6 @@ urlpatterns = [
     path("", include("base.urls.expense_urls")),
     path("", include("base.urls.income_urls")),
     path("", include("base.urls.dashboard_urls")),
+
+    path("", include("users.urls"))
 ]
