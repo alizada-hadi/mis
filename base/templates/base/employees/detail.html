@@ -4,11 +4,9 @@
 {% block title %}
    جزییات کارمند
 {% endblock title %}
-
 {% block page_title %}
 جزییات کارمند
 {% endblock page_title %}
-
 {% block breadcrumb %}
 <ol class="breadcrumb m-0">
     <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
@@ -17,11 +15,6 @@
 </ol>
 {% endblock breadcrumb %}
 {% block content %}
-
-<style>
-    
-</style>
-
 <!-- pay modal start -->
 <div class="modal fade" id="employee-pay" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -53,7 +46,6 @@
     </div><!-- /.modal-dialog -->
 </div>
 <!-- pay modal end -->
-
     <div class="row">
         <div class="col-lg-12 m-auto">
             <div class="card">
@@ -69,9 +61,9 @@
                                 <th class="font-size-18 text-center">نوع کارکرد</th>
                                 <th class="font-size-18 text-center">تعداد یا متراچ</th>
                                 <th class="font-size-18 text-center">میزان دستمزد</th>
-                                <th class="font-size-18 text-center">مبلغ قابل پرداخت</th>
-                                <th class="font-size-18 text-center">مبلغ پرداخت شده</th>
-                                <th class="font-size-18 text-center">مبلغ باقی مانده</th>
+                                <th class="font-size-18 text-center">جمله شد</th>
+                                <th class="font-size-18 text-center">مساعده</th>
+                                <th class="font-size-18 text-center">باقی مانده</th>
                                 <th class="font-size-18 text-center">تاریخ پرداخت</th>
                                 <th class="font-size-18 text-center">عملیات</th>
                             </tr>
@@ -87,7 +79,7 @@
                                     <td class="font-size-16 text-center">{{work.total_amount}}</td>
                                     <td class="font-size-16 text-center">{{work.get_amount}}</td>
                                     <td class="font-size-16 text-center">{{work.remain_amount}}</td>
-                                    <td class="font-size-16 text-center">{{work.updated_at|to_jalali:"%Y/%m/%d _ %H:%M:%S"}}</td>
+                                    <td class="font-size-16 text-center">{{work.updated_at|to_jalali:"%Y/%m/%d"}}</td>
                                     <td class="font-size-16 text-center">
                                         {% if work.get_amount == work.total_amount %}
                                         <button class="btn btn-outline-success">پرداخت شد</button>

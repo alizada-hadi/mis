@@ -1,4 +1,5 @@
 from decimal import Decimal
+from secrets import choice
 import sre_compile
 from unittest.util import _MAX_LENGTH
 from django.db import models
@@ -89,6 +90,10 @@ class OrderDetail(models.Model):
         ("بلی", "بلی"), 
         ("نخیر",  "نخیر"),
     )
+    CHOICES = (
+        ("رنگ",  "رنگ"),
+        ("واکیوم",  "واکیوم"),
+    )
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     height = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="قد", null=True, blank=True)
@@ -99,6 +104,7 @@ class OrderDetail(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="قیمت فی واحد")
     price_unit = models.CharField(max_length=20, choices=PRICE_UNIT)
     alternative = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    vacum = models.CharField(max_length=20, choices=CHOICES, null=True, blank=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="مجموع")
     remain_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="مقدار باقی مانده")
     with_color =  models.CharField(max_length=20, choices=WITH_COLOR, null=True, blank=True)

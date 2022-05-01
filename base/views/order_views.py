@@ -180,6 +180,11 @@ def order_detail_view(request, pk):
         if price_unit == "kaldar":
             price_unit = "کلدار"
         work_type = request.POST.get("work_type")
+        vacum = request.POST.get("with_vacum")
+        if vacum == "color":
+            vacum = "رنگ"
+        elif vacum == "vacum":
+            vacum = "واکیوم"
         height =  request.POST.get("height")
         width = request.POST.get("width")
         depth = request.POST.get("depth")
@@ -204,6 +209,7 @@ def order_detail_view(request, pk):
             width=width, 
             depth=depth, 
             direction=direction, 
+            vacum=vacum,
             quantity=Decimal(quantity), 
             price=Decimal(price), 
             alternative=Decimal(alternative),
@@ -228,6 +234,20 @@ def order_detail_view(request, pk):
         "items" : items
     }
     return render(request, "base/orders/create_detail.html", context)
+
+
+
+def order_detail_delete(request):
+    if request.method == "POST":
+        order_detail = OrderDetail.objects.get(pk=request.POST.get("order_detail_id"))
+        try:
+            order_detail.delete()
+            messages.success(request, "جزییات فرمایش فوق موفقانه از سیستم حذف گردید. ")
+        except:
+            messages.error(request, "مشکل رخ داد، لطفا چک کرده و دوباره تلاش کنید. ")
+        
+        return redirect("order-detail", order_detail.order.id)
+
 
 @login_required(login_url="login")
 @allowed_groups(groups=['admin'])

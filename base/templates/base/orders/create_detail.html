@@ -26,6 +26,9 @@
     #painter{
         display: none;
     }
+    #vacum{
+        display:none;
+    }
 </style>
 
 <!-- get pre pay -->
@@ -54,6 +57,29 @@
     </div><!-- /.modal-dialog -->
 </div>
 <!-- get pre pay end -->
+
+<div class="modal fade" id="delete_order_detail" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title mt-0" id="modal-header"></h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'order-detail-delete' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="order_detail_id" id="order-detail-id">
+                    <p class="alert alert-danger text-center font-size-18">
+                        آیا میخواهید جزییات این فرمایش را حذف کنید؟ 
+                    </p>
+                    <button class="btn btn-danger btn-lg mt-2">حذف</button>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
 
 <div class="row">
     <div class="col-lg-10 m-auto">
@@ -173,11 +199,13 @@
                                     <td class="font-size-16 text-center">{{item.price}} {{item.price_unit}}</td>
                                     <td class="font-size-16 text-center">{{item.total}}</td>
                                     <td class="font-size-16 text-center">
-                                        <button class="btn btn-outline-danger btn-sm">
+                                        <button 
+                                        data-target="#delete_order_detail"
+                                        data-toggle="modal"
+                                        data-title="{{item.category.name}}"
+                                        data-id="{{item.id}}"
+                                        class="btn btn-outline-danger del-btns btn-sm">
                                             <i class="bx bx-trash font-size-20 align-middle"></i>
-                                        </button>
-                                        <button class="btn btn-outline-primary btn-sm">
-                                            <i class="bx bx-edit font-size-20 align-middle"></i>
                                         </button>
                                         <a href="{% url 'add-employee' item.id %}" class="btn btn-outline-success btn-sm">
                                             <i class="bx bx-dots-horizontal-rounded align-middle font-size-20 "></i>
@@ -212,7 +240,6 @@
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <a class="dropdown-item font-size-18" target="_blank" href="{% url 'customer-order-pdf' order.id %}">چاپ بل برای مشتری</a>
                                     <a class="dropdown-item font-size-18" target="_blank" href="{% url 'employee-order-pdf' order.id %}">چاپ بل برای کارمند</a>
-                                    <!-- <a class="dropdown-item font-size-18" href="#">Something else</a> -->
                                 </div>
                             </div>
                             
@@ -284,6 +311,13 @@
                                     <option value="no">نخیر</option>
                                 </select>
                             </div>
+                            <div class="col-lg-3 mt-2" id="vacum">
+                                <label for="" class="font-size-18">واکیوم</label>
+                                <select name="with_vacum" class="form-control form-control-lg" id="">
+                                    <option value="color">رنگ</option>
+                                    <option value="vacum">واکیوم</option>
+                                </select>
+                            </div>
                         </div>  
                          
                         <button class="btn btn-dark btn-lg mt-4">ذخیره کردن</button>
@@ -315,23 +349,23 @@
                   $("#depth").hide() 
                   $("#color").hide()
                 }
-                else if(val == "دروازه" || val == "کلکین" || val == "ضد سرقت"){
+                else if(val == "ضد سرقت"){
+                    $("#vacum").show()
+                    $("#color").hide()
+                }
+                else if(val == "دروازه" || val == "کلکین" || val == "ضد سرقت", "چوکات ترکی"){
                 $("#direction").show()
                 $("#height").show()
                 $("#width").show()
                 $("#depth").show()
                 $("#color").show()
             }
+            
+            else{
+                $("#vacum").hide()
+            }
           })  
-          $("#with_color").change(function(){
-              let value = $(this).val()
-              if (value == "yes"){
-                  $("#painter").show()
-              }
-              else{
-                  $("#painter").hide()
-              }
-          })
+          
         })
         var label = document.getElementById("price_unit_label")
         $("#unit_price").change(function(){
@@ -351,6 +385,19 @@
                 $("#alternative").hide()
             }
         })
+
+        const header = document.getElementById("modal-header")
+        const btns = [...document.getElementsByClassName("del-btns")]
+        const order_detail_id = document.getElementById("order-detail-id")
+        btns.forEach(btn => btn.addEventListener("click", () => {
+            const work = btn.getAttribute("data-title")
+            const id = btn.getAttribute("data-id")
+            header.innerHTML = `
+                حذف فرمایش ${work} ؟
+            `
+            order_detail_id.value = id
+        }))
+
         
     </script>
 
