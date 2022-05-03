@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load jalali_tags %}
+{% block title %}
+    مشتری
+{% endblock title %}
+
+{% block page_title %}
+{{customer.first_name}} {{customer.last_name}}
+{% endblock page_title %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'my-customer' %}">لیست مشتریان</a></li>
+    <li class="breadcrumb-item active">{{customer.first_name}} {{customer.last_name}} </li>
+</ol>
+{% endblock breadcrumb %}
+{% block content %}
+    <div class="row">
+        <div class="col-xl-10 m-auto col-lg-12 col-md-12 col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="text-dark" style="font-weight: bold;">{{customer.first_name}} {{customer.last_name}}  <span class="text-muted font-size-15"> - {{customer.address}} / {{customer.phone_number}} - {{customer.social_number}}</span></h3>
+
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <p class="alert alert-info text-center font-size-18">
+                            با کلیک روی دکمه ایجاد فرمایش، فرمایش جدید را برای این مشتری ثبت کنید. تعداد کل فرمایشات این مشتری {{customer.order_set.all.count}} می باشد. 
+                        </p>
+                        
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

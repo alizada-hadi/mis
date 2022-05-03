@@ -1,0 +1,45 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+   لیست دریافتی ها از {{customer.first_name}} {{customer.last_name}}
+{% endblock title %}
+
+{% block page_title %}
+لیست دریافتی ها از {{customer.first_name}} {{customer.last_name}}
+{% endblock page_title %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
+    
+    <li class="breadcrumb-item active"> لیست دریافتی ها از {{customer.first_name}} {{customer.last_name}}</li>
+</ol>
+{% endblock breadcrumb %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-9 m-auto">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <h3 class="text-dark" style="font-weight: bold;">لیست دریافتی ها</h3>
+                        </div>
+                        
+                    </div>
+                </div>
+                <hr>
+                <form action="" method="POST" class="p-3">
+                    {% csrf_token %}
+                    <p class="alert alert-danger text-center font-size-18">
+                        آیا میخواهید مورد فوق را از سیستم حذف کنید؟ این عمل باعث تغییرات در محاسبات شما میشود . 
+                    </p>
+                    <button class="btn btn-danger btn-lg mt-2">بلی، حذف</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

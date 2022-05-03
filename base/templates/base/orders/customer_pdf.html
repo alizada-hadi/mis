@@ -63,7 +63,7 @@
         </div>
         <div class="right">
             <h3> شماره تماس : 0794153462</h3>
-            <h3> تاریخ : {{order.date_ordered|date:"Y/M/d"}}</h3>
+            <h3> تاریخ : {{order.date_ordered|date:"Y/m/d"}}</h3>
         </div>
 
         <br><br>
@@ -86,8 +86,8 @@
                         <td>{{item.category.name}}</td>
                         <td>{{item.type}}</td>
                         <td>{{item.quantity}}</td>
-                        <td>{{item.price}}</td>
-                        <td>{{item.total}}</td>
+                        <td>{{item.price}} {{item.price_unit}}</td>
+                        <td>{{item.total}} افغانی</td>
                     </tr>
                 {% endfor %}
             </tbody>

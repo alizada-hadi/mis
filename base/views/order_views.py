@@ -48,6 +48,34 @@ def recieve_view(request):
             return redirect("create-order" ,order.customer.id)
 
 
+# recieve list
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
+def recieve_list_view(request, pk):
+    customer = get_object_or_404(Customer, pk=pk)
+    orders = customer.order_set.all()
+    recieves = []
+
+    for order in orders:
+        for r in order.recieve_set.all():
+            recieves.append(r)
+
+    context = {
+        "customer" : customer, 
+        "orders" : orders, 
+        "recieves" : recieves
+    }
+    return render(request, "base/orders/recieve_list.html", context)
+
+# delete recieve amount
+def delete_recieve(request, pk, order_id):
+    order = get_object_or_404(Order, pk=order_id)
+    recieve = get_object_or_404(Recieve, pk=pk)
+    if request.method == "POST":
+        recieve.delete()
+        return redirect("recieve-list", order.id)
+    return render(request, "base/orders/delete_recieve.html")
+
 # create new order
 @login_required(login_url="login")
 @allowed_groups(groups=['admin'])
@@ -201,8 +229,8 @@ def order_detail_view(request, pk):
         elif direction == "left":
             direction = 'چپ'
 
-
-        obj = OrderDetail.objects.create(
+        try:
+            OrderDetail.objects.create(
             order=order, 
             category=category, 
             height=height, 
@@ -215,15 +243,15 @@ def order_detail_view(request, pk):
             alternative=Decimal(alternative),
             price_unit=price_unit,
             type=work_type, 
-        )
-        if obj:
+            )
             order.total_amount += Decimal(quantity) * Decimal(price)
             order.save()
             messages.success(request, f"جزییات فرمایش نمبر {order.id} موفقانه ثبت سیستم گردید.")
             return redirect("order-detail", order.id)
-        else:
+        except:
             messages.error(request, "مشکلی رخ داد، لطفا دوباره سعی کنید.")
             return redirect("order-detail", order.id)
+            
     context = {
         "order" : order, 
         "categories" : categories, 
@@ -317,25 +345,6 @@ def customer_generate_pdf(request, pk):
     return response
 
 
-
-# recieve list
-@login_required(login_url="login")
-@allowed_groups(groups=['admin'])
-def recieve_list_view(request, pk):
-    customer = get_object_or_404(Customer, pk=pk)
-    orders = customer.order_set.all()
-    recieves = []
-
-    for order in orders:
-        for r in order.recieve_set.all():
-            recieves.append(r)
-
-    context = {
-        "customer" : customer, 
-        "orders" : orders, 
-        "recieves" : recieves
-    }
-    return render(request, "base/orders/recieve_list.html", context)
 
 
 

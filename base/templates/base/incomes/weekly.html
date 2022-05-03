@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 {% load income_tags %}
 {% block title %}
-    درآمد این ماه
+    درآمد این هفته
 {% endblock title %}
 
 {% block page_title %}
-لیست درآمد این ماه
+لیست درآمد این هفته
 {% endblock page_title %}
 
 {% block breadcrumb %}
 <ol class="breadcrumb m-0">
     <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
-    <li class="breadcrumb-item active">لیست درآمد این ماه</li>
+    <li class="breadcrumb-item active">لیست درآمد این هفته</li>
 </ol>
 {% endblock breadcrumb %}
 {% block content %}
@@ -28,28 +28,11 @@
                             <div class="row">
                                 <div class="col-3">
                                     <div>
-                                        <p style="font-weight: bold;" class="text-dark mb-2 font-size-20">درآمد این ماه</p>
-                                        <h4 class="mb-0 text-dark "></h4>
+                                        <p style="font-weight: bold;" class="text-dark mb-2 font-size-20">درآمد این هفته</p>
+                                        <h4 class="mb-0 text-dark ">{% weekly_total_income start_week end_week %}</h4>
                                     </div>
                                 </div>
-                                <div class="col-3">
-                                    <div>
-                                        <p class="text-dark font-size-20 mb-2" style="font-weight: bold;" >درآمد ماه گذشته</p>
-                                        <h4 class="mb-0 text-dark"></h4>
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    <div>
-                                        <p class="text-dark font-size-20 mb-2" style="font-weight: bold;" >تفاوت با ماه پیش</p>
-                                        <h4 class="mb-0 text-dark" dir="ltr">%</h4>
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    <div>
-                                        <p class="text-dark font-size-20 mb-2" style="font-weight: bold;" >نسبت به مصرف این ماه</p>
-                                        <h5 class="mb-0 text-dark font-size-20 " dir="ltr">%</h5>
-                                    </div>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>

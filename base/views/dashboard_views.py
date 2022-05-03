@@ -66,3 +66,16 @@ def dashboard(request):
     }
 
     return render(request, "base/dashboards/index.html", context)
+
+
+
+
+@login_required(login_url="login")
+@allowed_groups(groups=["manager"])
+def manager_dashboard(request):
+
+
+    return render(request, "base/dashboards/manager_dashboard.html")
+
+
+

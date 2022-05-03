@@ -50,7 +50,11 @@ def user_login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect("/")
+            for group in user.groups.all():
+                if group.name == "manager":
+                    return redirect("manager-dashboard")
+                else:
+                    return redirect("/")
         else:
             return redirect("login")
     return render(request, "users/login.html")

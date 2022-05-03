@@ -96,17 +96,18 @@ def monthly_income_report(request):
 @login_required(login_url="login")
 @allowed_groups(groups=['admin'])
 def weekly_income_report(request):
-    now = datetime.now()
-    month = date2jalali(now).month
-    day = date2jalali(now).day
-    # change day to week
-    week = day/7
-    current_week = (month + week) * 4.28
-    current_week = math.floor(current_week)
-    incomes = Income.objects.filter(recieved_at__week=current_week)
+    date = custom_time.date.today()
+    date_in_hijri = date2jalali(date)
+    start_week = date_in_hijri - custom_time.timedelta(date_in_hijri.weekday())
+    end_week = start_week + custom_time.timedelta(7)
+
+    
+    incomes = Income.objects.filter(recieved_at__range=[str(start_week), str(end_week)])
 
     context = {
-        "incomes" : incomes
+        "incomes" : incomes, 
+        "start_week" : start_week, 
+        "end_week" : end_week
     }
 
     return render(request, "base/incomes/weekly.html", context)

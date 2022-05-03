@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from base.models import Customer
+from base.models import Customer, Exhibition
 from django.contrib import messages
 from users.decorators import allowed_groups
 from django.contrib.auth.decorators import login_required
@@ -10,8 +10,10 @@ from django.contrib.auth.decorators import login_required
 @allowed_groups(groups=['admin'])
 def customer_list_view(request):
     customers = Customer.objects.all()
+    exhibitions = Exhibition.objects.all()
     context = {
-        "customers" : customers
+        "customers" : customers, 
+        "exhibitions" : exhibitions
     }
 
     return render(request, "base/customers/list.html", context)
@@ -22,6 +24,7 @@ def customer_list_view(request):
 @allowed_groups(groups=['admin'])
 def customer_create_view(request):
     if request.method == "POST":
+        branch = Exhibition.objects.get(pk=request.POST.get("exhibition"))
         name = request.POST.get("first_name")
         last_name = request.POST.get("last_name")
         phone_number = request.POST.get("phone_number")
@@ -30,6 +33,7 @@ def customer_create_view(request):
 
         try:
             Customer.objects.create(
+                add_by=branch,
                 first_name=name, 
                 last_name=last_name, 
                 phone_number=phone_number, 
@@ -37,9 +41,10 @@ def customer_create_view(request):
                 address=address
             )
             messages.success(request, "مشتری جدید موفقانه ثبت گردید.")
+            return redirect("create-order", Customer.objects.last().id)
         except:
             messages.error(request, "مشکلی رخ داد، لطفا دوباره تلاش کنید.")
-        return redirect("customer-list")
+            return redirect("customer-list")
 
 @login_required(login_url="login")
 @allowed_groups(groups=['admin'])

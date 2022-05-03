@@ -241,6 +241,11 @@ def monthly_expenses_view(request):
 @login_required(login_url="login")
 @allowed_groups(groups=['admin'])
 def weekly_expenses_view(request):
+    date = my_time.date.today()
+    date_in_hijri = date2jalali(date)
+    start_week = date_in_hijri - my_time.timedelta(date_in_hijri.weekday())
+    end_week = start_week + my_time.timedelta(7)
+    
     # first, get the current date and time
     now = datetime.now()
     # second, change it to hijri date and get the month
@@ -257,7 +262,7 @@ def weekly_expenses_view(request):
         last_week =  current_week - 1
     # fourth, get all the expenses happened in this week
 
-    expenses = Expense.objects.filter(exp_date__week=current_week)
+    expenses = Expense.objects.filter(exp_date__range=[str(start_week), str(end_week)])
     # fifth, calculate the total amount, paid, and remain amount as well as the percentage of ratio 
     
     total = 0

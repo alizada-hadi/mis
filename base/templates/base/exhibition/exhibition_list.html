@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load jalali_tags %}
+{% block title %}
+    لیست نمایشگاه ها
+{% endblock title %}
+
+{% block page_title %}
+لیست نمایشگاه ها
+{% endblock page_title %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
+    <li class="breadcrumb-item active">لیست نمایشگاه ها</li>
+</ol>
+{% endblock breadcrumb %}
+{% block content %}
+
+<!-- create modal -->
+<div class="modal fade" id="add-branch" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title mt-0">ثبت نمایشگاه جدید</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="POST">
+                    {% csrf_token %}
+
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <label for="" class="font-size-18">مسول نمایشگاه</label>
+                            <select name="manager" class="form-control form-control-lg" id="">
+                                {% for user in users %}
+                                    <option value="{{user.id}}">{{user.first_name}} {{user.last_name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-lg-4">
+                            <label for="" class="font-size-18">نام نمایشگاه</label>
+                            <input type="text" class="form-control form-control-lg" name="name" required>
+                        </div>
+                        <div class="col-lg-4">
+                            <label for="" class="font-size-18">آدرس نمایشگاه</label>
+                            <input type="text" class="form-control form-control-lg" name="address" required>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-dark btn-lg mt-3">ذخیره</button>
+                    
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- end create modal -->
+
+
+
+    <div class="row">
+        <div class="col-lg-10 m-auto">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-lg-6">
+                            <h3 class="text-dark" style="font-weight: bold;">لیست نمایشگاه ها</h3>
+                        </div>
+                        <div class="col-lg-6">
+                            <button 
+                            data-target="#add-branch"
+                            data-toggle="modal"
+                            class="float-right btn btn-light btn-lg"
+                            >ثبت نمایشگاه جدید<i class="bx bx-plus align-middle font-size-24"></i></button>
+                        </div>
+                    </div>
+                    <!--  -->
+                    <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="text-center font-size-18">شماره</th>
+                                    <th class="text-center font-size-18">نام نمایشگاه</th>
+                                    <th class="text-center font-size-18">مسول نمایشگاه</th>
+                                    <th class="text-center font-size-18">آدرس نمایشگاه</th>
+                                    <th class="text-center font-size-18">عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for exhibition in exhibitions %}
+                                <tr>
+                                        <td class="font-size-17 text-center">{{forloop.counter}}</td>
+                                        <td class="font-size-17 text-center">{{exhibition.name}}</td>
+                                        <td class="font-size-17 text-center">{{exhibition.manager.first_name}} {{exhibition.manager.last_name}}</td>
+                                        <td class="font-size-17 text-center">{{exhibition.address}}</td>
+                                        <td>
+                                            <button 
+                                            data-toggle="modal"
+                                            data-target="#update-exhibition"
+                                            class="btn btn-outline-primary btn-sm edit-ex-btns">
+                                                <i class="bx bx-edit align-middle font-size-20"></i>
+                                            </button>
+
+                                            <a href="#" class="btn btn-outline-secondary btn-sm">
+                                                <i class="bx bx-dots-horizontal-rounded align-middle font-size-20 "></i>
+                                            </a>
+                                            <button 
+                                            data-toggle="modal"
+                                            data-target="#delete-exhibition"
+                                            class="btn btn-outline-danger btn-sm delete-ex-btns">
+                                                <i class="bx bx-trash align-middle font-size-20"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    
+
+{% endblock content %}

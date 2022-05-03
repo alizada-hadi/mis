@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load jalali_tags %}
+{% block title %}
+    ثبت مشتری
+{% endblock title %}
+
+{% block page_title %}
+ثبت مشتری جدید
+{% endblock page_title %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'my-customer' %}">لیست مشتریان</a></li>
+    <li class="breadcrumb-item active">ثبت مشتری جدید </li>
+</ol>
+{% endblock breadcrumb %}
+{% block content %}
+
+    <div class="row">
+        <div class="col-xl-10 col-lg-12 col-md-12 col-sm-12 m-auto">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-lg-8 col-md-8 col-sm-10">
+                            <h3 class="text-dark" style="font-weight: bold;">ثبت مشتری جدید </h3>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-2">
+                            <a href="/" class="float-right btn btn-light btn-lg"><i class="bx bx-left-arrow-alt align-middle font-size-24"></i></a>
+                        </div>
+                    </div>
+                    <!--  -->
+                    
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-3">
+                                <label for="" class="font-size-18">اسم مشتری <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-lg" name="first_name" placeholder="محمد علی" required>
+                            </div>
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-3">
+                                <label for="" class="font-size-18">تخلص مشتری <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-lg" name="last_name" placeholder="احمدی" required>
+                            </div>
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-3">
+                                <label for="" class="font-size-18">آدرس <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-lg" name="address" placeholder="کابل، ناحیه سیزدهم" required>
+                            </div>
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-3">
+                                <label for="" class="font-size-18">شماره تماس <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-lg" name="phone_number" placeholder="0788123456" required>
+                            </div>
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-3">
+                                <label for="" class="font-size-18">شماره واتساپ یا تلگرام</label>
+                                <input type="text" class="form-control form-control-lg" name="social_number" placeholder="0788123456">
+                            </div>
+                        </div>
+
+                        <button class="btn btn-dark btn-lg mt-3">ذخیره</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    
+
+{% endblock content %}

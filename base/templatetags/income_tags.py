@@ -111,6 +111,17 @@ def monthly_income_comparision(month):
     return percentage
 
 
+# weekly report
+
+@register.simple_tag
+def weekly_total_income(start_week, end_week):
+    incomes = Income.objects.filter(recieved_at__range = [str(start_week), str(end_week)])
+    total = 0
+    for i in incomes:
+        total += i.total
+    
+    return total
+
 # daily
 
 @register.simple_tag

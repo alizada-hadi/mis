@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load jalali_tags %}
+{% block title %}
+    لیست مشتریان
+{% endblock title %}
+
+{% block page_title %}
+لیست مشتریان
+{% endblock page_title %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
+    <li class="breadcrumb-item active">لیست مشتریان</li>
+</ol>
+{% endblock breadcrumb %}
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-10 m-auto">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-lg-6">
+                            <h3 class="text-dark" style="font-weight: bold;">لیست مشتریان</h3>
+                        </div>
+                        <div class="col-lg-6">
+                            <a href="{% url 'mine-customer-create' %}" class="float-right btn btn-light btn-lg">ثبت مشتری جدید <i class="bx bx-plus align-middle font-size-24"></i></a>
+                        </div>
+                    </div>
+                    <!--  -->
+                    <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="text-center font-size-18">شماره</th>
+                                    <th class="text-center font-size-18">نام و تخلص</th>
+                                    <th class="text-center font-size-18">شماره تماس</th>
+                                    <th class="text-center font-size-18">شماره واتساپ یا تلگرام</th>
+                                    <th class="text-center font-size-18">آدرس</th>
+                                    <th class="text-center font-size-18">تاریخ مراجعه</th>
+                                    <th class="text-center font-size-18">عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for customer in customers %}
+                                <tr>
+                                        <td class="font-size-17 text-center">{{forloop.counter}}</td>
+                                        <td class="font-size-17 text-center">{{customer.first_name}} {{customer.last_name}}</td>
+                                        <td class="font-size-17 text-center">{{customer.phone_number}}</td>
+                                        <td class="font-size-17 text-center">{{customer.social_number}}</td>
+                                        <td class="font-size-17 text-center">{{customer.address}}</td>
+                                        <td class="font-size-17 text-center">{{customer.created_at|to_jalali:"%Y-%m-%d"}}</td>
+                                        <td>
+                                            <button 
+                                            data-toggle="modal"
+                                            data-target="#update-customer"
+                                            data-name="{{customer.first_name}}"
+                                            data-last="{{customer.last_name}}"
+                                            data-phone="{{customer.phone_number}}"
+                                            data-social="{{customer.social_number}}"
+                                            data-address="{{customer.address}}"
+                                            data-id="{{customer.id}}"
+                                            class="btn btn-outline-primary btn-sm edit-btns">
+                                                <i class="bx bx-edit align-middle font-size-20"></i>
+                                            </button>
+
+                                            <a href="#" class="btn btn-outline-secondary btn-sm">
+                                                <i class="bx bx-dots-horizontal-rounded align-middle font-size-20 "></i>
+                                            </a>
+                                            <button 
+                                            data-toggle="modal"
+                                            data-target="#delete-customer"
+                                            data-name="{{customer.first_name}}"
+                                            data-last="{{customer.last_name}}"
+                                            data-id="{{customer.id}}"
+                                            class="btn btn-outline-danger btn-sm delete-btns">
+                                                <i class="bx bx-trash align-middle font-size-20"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    
+
+{% endblock content %}

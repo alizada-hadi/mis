@@ -30,11 +30,19 @@
                     {% csrf_token %}
 
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg-4">
+                            <label for="" class="font-size-16">معرف / نام نمایشگاه</label>
+                            <select name="exhibition" class="form-control form-control-lg" id="">
+                                {%  for exhibition in exhibitions %}
+                                    <option value="{{exhibition.id}}">{{exhibition.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-lg-4">
                             <label for="" class="font-size-16">نام مشتری</label>
                             <input type="text" class="form-control form-control-lg" name="first_name" placeholder="نام مشتری شما">
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-4">
                             <label for="" class="font-size-16">تخلص مشتری</label>
                             <input type="text" class="form-control form-control-lg" name="last_name" placeholder="تخلص مشتری شما">
                         </div>
