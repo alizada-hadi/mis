@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    لیست محصولات
+{% endblock title %}
+
+{% block page_title %}
+لیست محصولات
+{% endblock page_title %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
+    <li class="breadcrumb-item active">لیست محصولات</li>
+</ol>
+{% endblock breadcrumb %}
+{% block content %}
+
+<!-- create product modal start -->
+<div class="modal fade" id="create-product" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title mt-0" id="">ثبت محصول جدید</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="col-lg">
+                        <label for="" class="font-size-18">نام محصول</label>
+                        <input type="text" class="form-control form-control-lg" name="pro_name" placeholder="دروازه">
+                    </div>
+                    <div class="col-lg mt-3">
+                        <label for="" class="font-size-18">توضیحات</label>
+                        <textarea name="desc" id="" class="form-control form-control-lg" cols="30" rows="10" placeholder="توضیحات در مورد محصول..."></textarea>
+                    </div>
+                    <div class="col-lg">
+                        <label for="" class="font-size-18">عکس محصول</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" name="product-name" class="custom-file-input" id="inputGroupFilewithlabelicon01">
+                                <label class="custom-file-label" for="inputGroupFilewithlabelicon01" aria-describedby="inputGroupFileAddonwithlabelicon01">یک عکس برای محصول انتخاب کنید.</label>
+                            </div>
+                            <div class="input-group-append">
+                                <span class="input-group-text bg-transparent" id="inputGroupFileAddonwithlabelicon01"><i class="bx bxs-folder-open"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-dark btn-lg mt-3 mx-2">ذخیره</button>
+
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- create product modal end -->
+<!-- delete modal start -->
+<div class="modal fade" id="delete-employee" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title mt-0" id="delete-employee-modal-header"></h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'employee-delete' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="employee" id="employee" >
+                    <p class="alert alert-danger text-center font-size-18">
+                        آیا واقعا میخواهید این کارمند را حذف کنید؟
+                    </p>
+                    <button class="btn btn-danger btn-lg mt-2">بلی، حذف</button>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- delete modal end -->
+    <div class="row">
+        <div class="col-lg-10 m-auto">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-lg-6">
+                            <h3 class="text-dark" style="font-weight: bold;">لیست محصولات</h3>
+                        </div>
+                        <div class="col-lg-6">
+                            <button
+                            data-toggle="modal"
+                            data-target="#create-product"
+                            class="float-right btn btn-light btn-lg">ثبت محصول جدید <i class="bx bx-plus align-middle font-size-24"></i></button>
+                        </div>
+                    </div>
+                    <!--  -->
+                
+                    <hr>
+
+                    <div class="row">
+                        {% for product in products %}
+                            <div class="col-lg-3">
+                                {{product.name}}
+                                <img src="{{product.image.url}}" alt="">
+                            </div>
+                        {% empty %}
+                        <p class="alert alert-info text-center font-size-18">هیچ محصولی  در دیتابیس یافت نشد. </p>
+                        {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+      
+
+{% endblock content %}

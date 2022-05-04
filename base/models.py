@@ -58,6 +58,8 @@ class Employee(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
+    description = models.TextField(null=True, blank=True)
+    image = models.ImageField(upload_to="product/images", default="product.jpg")
 
     def __str__(self):
         return self.name
