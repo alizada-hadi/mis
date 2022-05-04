@@ -7,7 +7,7 @@ from users.decorators import allowed_groups
 from django.contrib.auth.decorators import login_required
 
 @login_required(login_url="login")
-@allowed_groups(groups=['admin'])
+@allowed_groups(groups=['admin', 'superadmin'])
 def dashboard(request):
     labels = []
     data = {
