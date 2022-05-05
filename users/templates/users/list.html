@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    لیست کاربران
+{% endblock title %}
+
+{% block page_title %}
+لیست کاربران
+{% endblock page_title %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
+    <li class="breadcrumb-item active">لیست کاربران</li>
+</ol>
+{% endblock breadcrumb %}
+{% block content %}
+
+<!-- delete modal start -->
+<div class="modal fade" id="delete-user" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title mt-0" id="delete-user-modal-header"></h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'delete-user' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="user" id="user_id" >
+                    <p class="alert alert-danger text-center font-size-18">
+                        آیا واقعا میخواهید این کاربر را حذف کنید؟
+                    </p>
+                    <button class="btn btn-danger btn-lg mt-2">بلی، حذف</button>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- delete modal end -->
+    <div class="row">
+        <div class="col-lg-10 m-auto">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-lg-6">
+                            <h3 class="text-dark" style="font-weight: bold;">لیست کاربران</h3>
+                        </div>
+                        <div class="col-lg-6">
+                            <a href="{% url 'register' %}" class="float-right btn btn-light btn-lg">ثبت کاربران جدید <i class="bx bx-plus align-middle font-size-24"></i></a>
+                        </div>
+                    </div>
+                    <!--  -->
+                    <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="text-center font-size-18">شماره</th>
+                                    <th class="text-center font-size-18">نام و تخلص</th>
+                                    <th class="text-center font-size-18">نوع کاربر</th>
+                                    <th class="text-center font-size-18">آدرس ایمیل</th>
+                                    <th class="text-center font-size-18">عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                    <tr>
+                                        <td class="font-size-17 text-center">{{forloop.counter}}</td>
+                                        <td class="font-size-17 text-center">{{user.first_name}} {{user.last_name}}</td>
+                                        <td class="font-size-17 text-center">
+                                            <span class="badge badge-primary px-2 py-1">ادمین</span>
+                                        </td>
+                                        <td class="font-size-17 text-center">{{user.email}}</td>
+                                        
+                                        <td class="font-size-17 text-center">
+                                            <button
+                                            data-target="#delete-user"
+                                            data-toggle="modal"
+                                            data-id="{{user.id}}"
+                                            data-name="{{user.first_name}}"
+                                            data-last="{{user.last_name}}"
+                                            class="btn btn-outline-danger btn-sm delete-btns">
+                                                <i class="bx bx-trash align-middle font-size-22 "></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const empBtns = [...document.getElementsByClassName("delete-btns")]
+        const modal_header = document.getElementById("delete-user-modal-header")
+        const emp_hidden_input = document.getElementById("user_id")
+        empBtns.forEach(btn => btn.addEventListener("click", () => {
+            emp_id = btn.getAttribute("data-id")
+            name = btn.getAttribute("data-name")
+            last = btn.getAttribute("data-last")
+            
+            modal_header.innerHTML = `
+                حذف کاربر ${name} ${last}؟
+            `
+            emp_hidden_input.value = emp_id
+        }))
+    </script>    
+
+{% endblock content %}

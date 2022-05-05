@@ -8,6 +8,32 @@ from .decorators import allowed_groups
 from django.contrib.auth.decorators import login_required
 # register new user
 
+
+# user list and other functionality
+@login_required(login_url="login")
+@allowed_groups(groups=["admin"])
+def user_list_view(request):
+    users = User.objects.exclude(username="admin")
+
+    context = {
+        "users" : users
+    }    
+    return render(request, "users/list.html", context)
+
+
+@login_required(login_url="login")
+@allowed_groups(groups=["admin"])
+def delete_user_view(request):
+    if request.method == "POST":
+        user = User.objects.get(id=request.POST.get("user"))
+        try:
+            user.delete()
+            return redirect("user-list")
+        except:
+            return redirect("user-list")        
+
+
+
 @allowed_groups(groups=["superadmin", "admin"])
 @login_required(login_url="login")
 def user_register_view(request):
