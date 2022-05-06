@@ -380,4 +380,17 @@ def employee_work_view(request, pk):
     return render(request, "base/orders/employee_work.html", context)
 
 
+def delete_employee_work_view(request):
+    if request.method == "POST":
+        work = EmployeeFee.objects.get(pk=request.POST.get("work"))
+        try:
+            work.delete()
+            messages.success(request, "مورد فوق موفقانه حذف گردید. ")
+        except:
+            messages.error(request, "مشکلی رخ داد، لطفا چک کرده و دوباره تلاش کنید. ")
+        return redirect("add-employee", work.order_detail.id)
+
+
+
+
 

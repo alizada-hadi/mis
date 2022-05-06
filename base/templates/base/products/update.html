@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}
+    ویرایش محصول
+{% endblock title %}
+
+{% block page_title %}
+ویرایش محصول
+{% endblock page_title %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
+    <li class="breadcrumb-item active">ویرایش محصول</li>
+</ol>
+{% endblock breadcrumb %}
+{% block content %}
+
+    <div class="row">
+        <div class="col-xl-6 m-auto">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-lg-6">
+                            <h3 class="text-dark" style="font-weight: bold;">ویرایش محصول</h3>
+                        </div>
+                        <div class="col-lg-6">
+                            <a href="{% url 'product-list' %}" class="float-right btn btn-dark btn-lg"><i class="bx bx-left-arrow-alt align-middle font-size-24"></i></a>
+                        </div>
+                    </div>
+                    <!--  -->
+                
+                    <hr>
+
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="col">
+                            <label for="" class="font-size-18">نام محصول</label>
+                            {% render_field form.name class="form-control form-control-lg" %}
+                        </div>
+                        <div class="col mt-3">
+                            <label for="" class="font-size-18">توضیحات</label>
+                            {% render_field form.description class="form-control form-control-lg" %}
+                        </div>
+                        <div class="col mt-3">
+                            <label for="" class="font-size-18">عکس محصول</label>
+                            {% render_field form.image class="form-control form-control-lg" %}
+                        </div>
+
+                        <button class="btn btn-dark btn-lg mt-3">ذخیره</button>
+                    </form>
+
+                    
+                    
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+      
+
+{% endblock content %}

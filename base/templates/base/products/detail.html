@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    جزییات محصول
+{% endblock title %}
+
+{% block page_title %}
+جزییات محصول
+{% endblock page_title %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a href="/">صفحه اصلی</a></li>
+    <li class="breadcrumb-item active">جزییات محصول</li>
+</ol>
+{% endblock breadcrumb %}
+{% block content %}
+
+<!-- create product modal start -->
+<div class="modal fade" id="create-product" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title mt-0" id="">ثبت محصول جدید</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="col-lg">
+                        <label for="" class="font-size-18">نام محصول</label>
+                        <input type="text" class="form-control form-control-lg" name="pro_name" placeholder="دروازه">
+                    </div>
+                    <div class="col-lg mt-3">
+                        <label for="" class="font-size-18">توضیحات</label>
+                        <textarea name="desc" id="" class="form-control form-control-lg" cols="30" rows="10" placeholder="توضیحات در مورد محصول..."></textarea>
+                    </div>
+                    <div class="col-lg">
+                        <label for="" class="font-size-18">عکس محصول</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" name="product-name" class="custom-file-input" id="inputGroupFilewithlabelicon01">
+                                <label class="custom-file-label" for="inputGroupFilewithlabelicon01" aria-describedby="inputGroupFileAddonwithlabelicon01">یک عکس برای محصول انتخاب کنید.</label>
+                            </div>
+                            <div class="input-group-append">
+                                <span class="input-group-text bg-transparent" id="inputGroupFileAddonwithlabelicon01"><i class="bx bxs-folder-open"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-dark btn-lg mt-3 mx-2">ذخیره</button>
+
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- create product modal end -->
+<!-- delete modal start -->
+<div class="modal fade" id="delete-employee" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title mt-0" id="delete-employee-modal-header"></h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'employee-delete' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="employee" id="employee" >
+                    <p class="alert alert-danger text-center font-size-18">
+                        آیا واقعا میخواهید این کارمند را حذف کنید؟
+                    </p>
+                    <button class="btn btn-danger btn-lg mt-2">بلی، حذف</button>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- delete modal end -->
+    <div class="row">
+        <div class="col-xl-10 m-auto">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-lg-6">
+                            <h3 class="text-dark" style="font-weight: bold;">جزییات محصول</h3>
+                        </div>
+                        <div class="col-lg-6">
+                            <a href="{% url 'product-list' %}" class="float-right btn btn-dark btn-lg"><i class="bx bx-left-arrow-alt align-middle font-size-24"></i></a>
+                        </div>
+                    </div>
+                    <!--  -->
+                
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <div class="product-detai-imgs">
+                                <div class="row">
+                                    <div class="col-md-2 col-sm-3 col-4">
+                                        <div class="nav flex-column nav-pills " id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                            <a class="nav-link active" id="product-1-tab" data-toggle="pill" href="#product-1" role="tab" aria-controls="product-1" aria-selected="true">
+                                                <img src="{{product.image.url}}" alt="" class="img-fluid mx-auto d-block rounded">
+                                            </a>
+                                            <a class="nav-link" id="product-2-tab" data-toggle="pill" href="#product-2" role="tab" aria-controls="product-2" aria-selected="false">
+                                                <img src="{{product.image.url}}" alt="" class="img-fluid mx-auto d-block rounded">
+                                            </a>
+                                            <a class="nav-link" id="product-3-tab" data-toggle="pill" href="#product-3" role="tab" aria-controls="product-3" aria-selected="false">
+                                                <img src="{{product.image.url}}" alt="" class="img-fluid mx-auto d-block rounded">
+                                            </a>
+                                            <a class="nav-link" id="product-4-tab" data-toggle="pill" href="#product-4" role="tab" aria-controls="product-4" aria-selected="false">
+                                                <img src="{{product.image.url}}" alt="" class="img-fluid mx-auto d-block rounded">
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7 offset-md-1 col-sm-9 col-8">
+                                        <div class="tab-content" id="v-pills-tabContent">
+                                            <div class="tab-pane fade show active" id="product-1" role="tabpanel" aria-labelledby="product-1-tab">
+                                                <div>
+                                                    <img src="{{product.image.url}}" alt="" class="img-fluid mx-auto d-block">
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="product-2" role="tabpanel" aria-labelledby="product-2-tab">
+                                                <div>
+                                                    <img src="{{product.image.url}}" alt="" class="img-fluid mx-auto d-block">
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="product-3" role="tabpanel" aria-labelledby="product-3-tab">
+                                                <div>
+                                                    <img src="{{product.image.url}}" alt="" class="img-fluid mx-auto d-block">
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="product-4" role="tabpanel" aria-labelledby="product-4-tab">
+                                                <div>
+                                                    <img src="{{product.image.url}}" alt="" class="img-fluid mx-auto d-block">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-center">
+                                           
+                                            
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-6">
+                            <div class="mt-4 mt-xl-3">
+                                <a href="#" class="text-primary">{{product.name}}</a>
+                                <h4 class="mt-1 mb-3">{{product.name}}</h4>
+                                <!-- <h5 class="mb-4">Price : <span class="text-muted mr-2"><del>$240 USD</del></span> <b>$225 USD</b></h5> -->
+                                <p class="text-muted font-size-17 mb-4">{{product.description}}</p>
+                                
+
+                                <div class="product-color">
+                                    <h5 class="font-size-15">رنگها :</h5>
+                                    <a href="#" class="active">
+                                        <div class="product-color-item border rounded">
+                                            <img src="{{product.image.url}}" alt="" class="avatar-md">
+                                        </div>
+                                        <p>سیاه</p>
+                                    </a>
+                                    <a href="#">
+                                        <div class="product-color-item border rounded">
+                                            <img src="{{product.image.url}}" alt="" class="avatar-md">
+                                        </div>
+                                        <p>آبی</p>
+                                    </a>
+                                    <a href="#">
+                                        <div class="product-color-item border rounded">
+                                            <img src="{{product.image.url}}" alt="" class="avatar-md">
+                                        </div>
+                                        <p>سفید</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+      
+
+{% endblock content %}

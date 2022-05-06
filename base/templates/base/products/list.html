@@ -59,21 +59,21 @@
 </div>
 <!-- create product modal end -->
 <!-- delete modal start -->
-<div class="modal fade" id="delete-employee" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+<div class="modal fade" id="delete-product" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title mt-0" id="delete-employee-modal-header"></h3>
+                <h3 class="modal-title mt-0" id="delete-product-modal-header"></h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'employee-delete' %}" method="POST">
+                <form action="{% url 'product-delete' %}" method="POST">
                     {% csrf_token %}
-                    <input type="hidden" name="employee" id="employee" >
+                    <input type="hidden" name="product" id="product" >
                     <p class="alert alert-danger text-center font-size-18">
-                        آیا واقعا میخواهید این کارمند را حذف کنید؟
+                        آیا واقعا میخواهید این محصول را حذف کنید؟
                     </p>
                     <button class="btn btn-danger btn-lg mt-2">بلی، حذف</button>
                 </form>
@@ -113,17 +113,22 @@
                                     <div class="card-footer">
                                         <div class="row">
                                             <div class="col-lg-4">
-                                                <button class="btn btn-outline-info btn-lg">
+                                                <a href="{% url 'product-detail' product.id %}" class="btn btn-outline-info btn-lg">
                                                     <i class="bx bx-dots-horizontal-rounded font-size-24 align-middle"></i>
-                                                </button>
+                                                </a>
                                             </div>
                                             <div class="col-lg-4">
-                                                <button class="btn btn-outline-primary btn-lg">
+                                                <a href="{% url 'product-update' product.id %}" class="btn btn-outline-primary btn-lg">
                                                     <i class="bx bx-edit font-size-24 align-middle"></i>
-                                                </button>
+                                                </a>
                                             </div>
                                             <div class="col-lg-4">
-                                                <button class="btn btn-outline-danger btn-lg">
+                                                <button 
+                                                data-target="#delete-product"
+                                                data-toggle="modal"
+                                                data-id="{{product.id}}"
+                                                data-name="{{product.name}}"
+                                                class="btn btn-outline-danger btn-lg delete-btns">
                                                     <i class="bx bx-trash font-size-24 align-middle"></i>
                                                 </button>
                                             </div>
@@ -141,6 +146,21 @@
         </div>
     </div>
 
+
+    <script>
+        const proBtns = [...document.getElementsByClassName("delete-btns")]
+        const modal_header = document.getElementById("delete-product-modal-header")
+        const emp_hidden_input = document.getElementById("product")
+        proBtns.forEach(btn => btn.addEventListener("click", () => {
+            emp_id = btn.getAttribute("data-id")
+            name = btn.getAttribute("data-name")
+            
+            modal_header.innerHTML = `
+                حذف محصول ${name} ؟
+            `
+            emp_hidden_input.value = emp_id
+        }))
+    </script> 
 
       
 

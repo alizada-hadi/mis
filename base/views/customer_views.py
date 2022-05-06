@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from base.models import Customer, Exhibition
 from django.contrib import messages
 from users.decorators import allowed_groups
@@ -24,7 +24,12 @@ def customer_list_view(request):
 @allowed_groups(groups=['admin'])
 def customer_create_view(request):
     if request.method == "POST":
-        branch = Exhibition.objects.get(pk=request.POST.get("exhibition"))
+        branch = request.POST.get("exhibition")
+        print(f"type of branch is {type(branch)}")
+        print(f"one of my biggest experience during the six years of coding is that nothing can stop us excep {branch}")
+        if branch == "":
+            branch = None
+        b = Exhibition.objects.get(pk=branch)
         name = request.POST.get("first_name")
         last_name = request.POST.get("last_name")
         phone_number = request.POST.get("phone_number")
@@ -33,7 +38,7 @@ def customer_create_view(request):
 
         try:
             Customer.objects.create(
-                add_by=branch,
+                add_by=b,
                 first_name=name, 
                 last_name=last_name, 
                 phone_number=phone_number, 

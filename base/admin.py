@@ -1,5 +1,19 @@
 from django.contrib import admin
-from .models import Customer, Category, Order, OrderDetail, Employee, Recieve, EmployeeType, EmployeeFee, ExpenseCategory, Expense, Income, EmployeeAttendance
+from .models import (
+    Customer, 
+    Category, 
+    Order, 
+    OrderDetail, 
+    Employee, 
+    Recieve, 
+    EmployeeType, 
+    EmployeeFee, 
+    ExpenseCategory, 
+    Expense, 
+    Income, 
+    EmployeeAttendance,
+    Exhibition
+    )
 # Register your models here.
 
 
@@ -15,3 +29,4 @@ admin.site.register(ExpenseCategory)
 admin.site.register(Expense)
 admin.site.register(Income)
 admin.site.register(EmployeeAttendance)
+admin.site.register(Exhibition)

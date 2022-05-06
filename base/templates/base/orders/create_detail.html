@@ -171,11 +171,13 @@
                                     <td class="font-size-16 text-center">{{item.price}} {{item.price_unit}}</td>
                                     <td class="font-size-16 text-center">{{item.total}}</td>
                                     <td class="font-size-16 text-center">
-                                        <button class="btn btn-outline-danger btn-sm">
+                                        <button 
+                                        data-target="#delete_order_detail"
+                                        data-toggle="modal"
+                                        data-title="{{item.category.name}}"
+                                        data-id="{{item.id}}"
+                                        class="btn btn-outline-danger del-btns btn-sm">
                                             <i class="bx bx-trash font-size-20 align-middle"></i>
-                                        </button>
-                                        <button class="btn btn-outline-primary btn-sm">
-                                            <i class="bx bx-edit font-size-20 align-middle"></i>
                                         </button>
                                         <a href="{% url 'add-employee' item.id %}" class="btn btn-outline-success btn-sm">
                                             <i class="bx bx-dots-horizontal-rounded align-middle font-size-20 "></i>

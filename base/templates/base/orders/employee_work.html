@@ -21,6 +21,29 @@
 
 {%  block content %}
 
+<div class="modal fade" id="delete-work" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title mt-0" id="delete-work-modal-header"></h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'delete-employee-fee' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="work" id="work">
+                    <p class="alert alert-danger text-center font-size-18">
+                        آیا میخواهید جزییات این مورد را حذف کنید؟ 
+                    </p>
+                    <button class="btn btn-danger btn-lg mt-2">حذف</button>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
 <div class="row">
     <div class="col-lg-9 m-auto">
         <div class="card">
@@ -48,7 +71,11 @@
                                 <td class="font-size-16 text-center">{{obj.employee.emp_type.name}}</td>
                                 <td class="font-size-16 text-center">{{obj.fee}}</td>
                                 <td class="font-size-16 text-center">
-                                    <button class="btn btn-outline-danger btn-sm">
+                                    <button
+                                    data-toggle="modal"
+                                    data-target="#delete-work"
+                                    data-id="{{obj.id}}"
+                                    class="btn btn-outline-danger btn-sm del-btns">
                                         <i class="bx bx-trash align-middle font-size-20 "></i>
                                     </button>
                                 </td>
@@ -80,5 +107,19 @@
         </div>
     </div>
 </div>
+
+
+    <script>
+        const dle_header = document.getElementById("delete-work-modal-header")
+        const btns = [...document.getElementsByClassName("del-btns")]
+        const order_detail_id = document.getElementById("work")
+        btns.forEach(btn => btn.addEventListener("click", () => {
+            const id = btn.getAttribute("data-id")
+            dle_header.innerHTML = `
+                حذف کار ؟
+            `
+            work.value = id
+        }))
+    </script>
 
 {% endblock content %}
