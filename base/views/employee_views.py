@@ -1,6 +1,6 @@
 from decimal import Decimal
 from django.shortcuts import redirect, render
-from base.models import Employee, EmployeeFee, EmployeeType, OrderDetail, Expense, ExpenseCategory
+from base.models import Employee, EmployeeAttendance, EmployeeFee, EmployeeType, OrderDetail, Expense, ExpenseCategory
 from django.contrib import messages
 from base.forms.employee_forms import EmployeeForm
 from datetime import datetime
@@ -143,3 +143,41 @@ def employee_get_salary_view(request):
             return redirect("employee-detail", ef.employee.id)
 
 
+
+
+# employee attendance
+def employee_attendance_view(request, pk):
+
+    employee = Employee.objects.get(pk=pk)
+    attnedances = employee.employeeattendance_set.all()
+    if request.method == "POST":
+        status = request.POST.get("status")
+        if status == "present":
+            status = "حاضر"
+        elif status == "absent":
+            status = "غیر حاضر"
+        elif status == "late":
+            status = "تاخیر بیش از یک ساعت"
+        print(status)
+        penalty = request.POST.get("penalty")
+        print(penalty)
+        date = request.POST.get("date")
+        print(date)
+        
+        try:
+            EmployeeAttendance.objects.create(
+                employee=employee, 
+                status=status, 
+                penalty_percentage=penalty, 
+                date=date
+            )
+            messages.success(request, "عملیات موفقانه انجام شد. ")
+            
+        except:
+            messages.error(request, "مشکلی رخ داد، لطفا چک کرده و دوباره تلاش کنید. ")
+        return redirect("employee-attendance", employee.id)
+    context = {
+        "employee" : employee, 
+        "attnedances" :attnedances
+    }
+    return render(request, "base/employees/attendance.html", context)

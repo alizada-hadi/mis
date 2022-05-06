@@ -55,6 +55,21 @@ class Employee(models.Model):
         return f"{self.first_name} {self.last_name}"
 
 
+class EmployeeAttendance(models.Model):
+    STATUS = (
+        ("حاضر", "حاضر"), 
+        ("غایب", "غایب"), 
+        ("تاخیر بیش از یک ساعت", "تاخیر بیش از یک ساعت"), 
+    )
+    employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True)
+    status = models.CharField(max_length=20, choices=STATUS, default="حاضر")
+    penalty_percentage = models.DecimalField(max_digits=4, decimal_places=2, default=0)
+    date = models.DateField()
+
+    def __str__(self) -> str:
+        return f"{self.employee.first_name}'s attendance "
+
+
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
@@ -162,7 +177,6 @@ class EmployeeFee(models.Model):
 # expense and income
 class ExpenseCategory(models.Model):
     category_name = models.CharField(max_length=200)
-
     def __str__(self) -> str:
         return self.category_name
 

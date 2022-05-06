@@ -8,6 +8,7 @@ urlpatterns = [
     path("employee/update/<str:pk>/", employee_views.employee_update_view, name="employee-update"), 
     path("employee/delete/", employee_views.employee_delete_view, name="employee-delete"), 
     path("employee/detail/<str:pk>/", employee_views.employee_detail_view, name="employee-detail"),
-    path("employee/get/salary/", employee_views.employee_get_salary_view, name="employee-get-salary")
+    path("employee/get/salary/", employee_views.employee_get_salary_view, name="employee-get-salary"), 
+    path("employee/attendance/<str:pk>/", employee_views.employee_attendance_view, name="employee-attendance")
 
 ]
