@@ -20,15 +20,23 @@
 
 {% block content %}
 <style>
-    #alternative{
+    
+    #painter, #quantity, 
+    #alternative, 
+    #vacum, 
+    #meter, 
+    #price_per, 
+    #price_unit,
+    #height, 
+    #width,
+    #depth, 
+    #direction, 
+    #color, 
+    #work_type
+    {
         display: none;
     }
-    #painter{
-        display: none;
-    }
-    #vacum{
-        display:none;
-    }
+    
 </style>
 
 <!-- get pre pay -->
@@ -250,24 +258,32 @@
 
                     <form action="" method="POST">
                         {% csrf_token %}
-                        <div class="row mt-3">
-                            <div class="col-lg-3">
+                        <div class="row">
+                            <div class="col-lg-3 mt-2">
                                 <label for="" class="font-size-18">نام محصول</label>
                                 <select name="category" class="form-control form-control-lg" id="category">
+                                    <option value="">لطفا یک محصول را انتخاب کنید</option>
                                     {% for category in categories %}
                                         <option value="{{category.name}}">{{category.name}}</option>
                                     {% endfor %}
                                 </select>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-3 mt-2" id="quantity">
                                 <label for="" class="font-size-18">تعداد</label>
                                 <input type="number" name="qty" class="form-control form-control-lg" placeholder="تعداد فرمایشات">
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-3 mt-2" id="meter">
+                                <label for="" class="font-size-18">متراچ</label>
+                                <select name="unit" class="form-control form-control-lg" id="">
+                                    <option value="meter">متر</option>
+                                    <option value="amount">عدد</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3 mt-2" id="price_per">
                                 <label for="" class="font-size-18">قیمت فی واحد</label>
                                 <input type="number" name="price" class="form-control form-control-lg" placeholder="قیمت">
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-3 mt-2" id="price_unit">
                                 <label for="" class="font-size-18">واحد پول</label>
                                 <select name="price_unit" class="form-control form-control-lg" id="unit_price">
                                     <option value="afg">افغانی</option>
@@ -282,7 +298,7 @@
                                 <input type="number" step="0.01" name="alternative" class="form-control form-control-lg" placeholder="80.40">
                             </div>
 
-                            <div class="col-lg-3 mt-2">
+                            <div class="col-lg-3 mt-2" id="work_type">
                                 <label for="" class="font-size-18">نوعیت کار</label>
                                 <input type="text" name="work_type" class="form-control form-control-lg" placeholder="هشت ملی">
                             </div>
@@ -341,6 +357,18 @@
   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
   crossorigin="anonymous"></script>
     <script>
+    //     #painter, #quantity, 
+    // #alternative, 
+    // #vacum, 
+    // #meter, 
+    // #price_per, 
+    // #price_unit,
+    // #height, 
+    // #width,
+    // #depth, 
+    // #direction, 
+    // #color, 
+    // #work_type
         $(document).ready(function(){
           $("#category").change(function(){
               var val = $(this).val();
@@ -350,21 +378,60 @@
                   $("#width").hide()
                   $("#depth").hide() 
                   $("#color").hide()
+                  $("#vacum").hide()
+                  $("#quantity").show()
+                  $("#price_per").show()
+                  $("#price_unit").show()
+                  $("#work_type").show()
                 }
-                else if(val == "ضد سرقت"){
-                    $("#vacum").show()
+                else if(val == "دروازه ضد سرقت"){
                     $("#color").hide()
+                    $("#vacum").show()
+                    $("#direction").show()
+                    $("#height").show()
+                    $("#width").show()
+                    $("#depth").show()
+                    $("#quantity").show()
+                    $("#price_per").show()
+                    $("#price_unit").show()
+                    $("#work_type").show()
+                    
                 }
-                else if(val == "دروازه" || val == "کلکین" || val == "ضد سرقت", "چوکات ترکی"){
-                $("#direction").show()
-                $("#height").show()
-                $("#width").show()
-                $("#depth").show()
-                $("#color").show()
+                else if(val == "دروازه" || val == "کلکین" || val == "چوکات ترکی"){
+                    $("#direction").show()
+                    $("#height").show()
+                    $("#width").show()
+                    $("#depth").show()
+                    $("#color").show()
+                    $("#work_type").show()
+                    $("#quantity").show()
+                    $("#price_per").show()
+                    $("#price_unit").show()
+                    $("#vacum").hide()
             }
+                else if(val == "الماری" || val == "کابینیت"){
+                    $("#height").show()
+                    $("#width").show()
+                    $("#depth").show()
+                    $("#direction").hide()
+                    $("#color").hide()
+                    $("#vacum").hide()
+                    $("#quantity").show()
+                    $("#price_per").show()
+                    $("#price_unit").show()
+                }
             
             else{
                 $("#vacum").hide()
+                $("#quantity").hide()
+                $("#price_per").hide()
+                $("#price_unit").hide()
+                $("#height").hide()
+                $("#width").hide()
+                $("#depth").hide()
+                $("#direction").hide()
+                $("#color").hide()
+                $("#work_type").hide()
             }
           })  
           

@@ -16,7 +16,7 @@ class Exhibition(models.Model):
 
 
 class Customer(models.Model):
-    add_by = models.ForeignKey(Exhibition, on_delete=models.SET_NULL, null=True, blank=True)
+    # add_by = models.ForeignKey(Exhibition, on_delete=models.SET_NULL, null=True, blank=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     address = models.CharField(max_length=500)
@@ -120,6 +120,14 @@ class OrderDetail(models.Model):
     CHOICES = (
         ("رنگ",  "رنگ"),
         ("واکیوم",  "واکیوم"),
+    )
+    OPTIONS = (
+        ("بلی", "بلی"), 
+        ("نخیر",  "نخیر"),
+    )
+    UNIT = (
+        ("عدد", "عدد"), 
+        ("متر",  "متر"),
     )
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
