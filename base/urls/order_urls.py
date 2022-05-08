@@ -10,6 +10,7 @@ urlpatterns = [
 
     path("order/<str:pk>/emp/pdf/", order_views.employee_generate_pdf, name="employee-order-pdf"), 
     path("order/<str:pk>/customer/pdf/", order_views.customer_generate_pdf, name="customer-order-pdf"), 
+    path("order/<str:pk>/customer/secure/door/pdf/", order_views.customer_generate_secure_door_pdf, name="customer-secure-door-pdf"),
     path("recieve/create/", order_views.recieve_view, name="add-recieve"), 
     path("recieve/<str:pk>/list/", order_views.recieve_list_view, name="recieve-list"), 
     path("recieve/<str:pk>/<str:order_id>/delete/", order_views.delete_recieve, name="delete-recieve"),

@@ -190,7 +190,7 @@
                             </div>
                             <div class="col-lg-3">
                                 <label for="" class="font-size-18">تاریخ تحویل </label>
-                                <input type="text" class="form-control form-control-lg" name="done_order" id="gDatepicker">
+                                <input type="text" class="form-control form-control-lg" name="done_order" id="completionDatepicker">
                             </div>
                             <div class="col-lg-6">
                                 <label for="" class="font-size=18">تفصیلات</label>
@@ -261,8 +261,13 @@
                 }
             }
             })
-            $("#gDatepicker").pDatepicker({
+            $("#completionDatepicker").pDatepicker({
                 format: 'YYYY-MM-DD',
+                calendar:{
+                    persian: {
+                        locale: 'fa'
+                    }
+                }
             })
         })
 

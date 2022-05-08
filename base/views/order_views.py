@@ -1,3 +1,4 @@
+from unicodedata import category
 from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse
 from django.template.loader import render_to_string
@@ -112,8 +113,8 @@ def order_create_view(request, pk):
             customer=customer,
             paid_amount = 0,
             total_amount = 0, 
-            date_ordered = date_in_hijri,
-            completion_date = date_in_hijri,
+            date_ordered = recieve_date,
+            completion_date = done_date,
             description=description,
         )
         if order:
@@ -318,27 +319,79 @@ def employee_generate_pdf(request, pk):
 @allowed_groups(groups=['admin'])
 def customer_generate_pdf(request, pk):
     order = Order.objects.get(pk=pk)
-    items = order.orderdetail_set.all()
+    product_list = ["دروازه", "کلکین", "چوکات", "الماری", "کابینیت"]
+    items = order.orderdetail_set.all().filter(category__name__in=product_list)
 
     total_amount = 0
     remain_amount = 0
-    for amount in order.orderdetail_set.all():
+    for amount in order.orderdetail_set.all().filter(category__name__in=product_list):
         total_amount += amount.total
         remain_amount = total_amount - order.paid_amount
-
+    first_payment = 50 * total_amount / 100
+    second_payment = 40 * total_amount / 100
+    final_payment = 10 * total_amount / 100
     context = {
         "order":order, 
         "items" : items, 
         "total_amount" : total_amount, 
-        'remain_amount' : remain_amount
+        'remain_amount' : remain_amount, 
+        "first_payment" : first_payment, 
+        "second_payment" : second_payment, 
+        "final_payment" : final_payment
     }
 
     html_string = render_to_string(
         "base/orders/customer_pdf.html", 
         context
     )
-    html = HTML(string=html_string)
-    result = html.write_pdf()
+    html = HTML(string=html_string, base_url=request.build_absolute_uri())
+    result = html.write_pdf(presentational_hints=True)
+
+    response = HttpResponse(content_type="application/pdf")
+    response['Content-Disposition'] = f'inline; filename=customer_order_{order.id}.pdf'
+    response['Content-Transfer-Encoding'] = 'binary'
+    with tempfile.NamedTemporaryFile(delete=True) as output:
+        output.write(result)
+        output.flush()
+        output = open(output.name, "rb")
+        response.write(output.read())
+    
+    return response
+
+
+
+
+@login_required(login_url="login")
+@allowed_groups(groups=['admin'])
+def customer_generate_secure_door_pdf(request, pk):
+    order = Order.objects.get(pk=pk)
+    product_list = ["دروازه ضد سرقت", "چوکات"]
+    items = order.orderdetail_set.all().filter(category__name__in=product_list)
+
+    total_amount = 0
+    remain_amount = 0
+    for amount in order.orderdetail_set.all().filter(category__name__in=product_list):
+        total_amount += amount.total
+        remain_amount = total_amount - order.paid_amount
+    first_payment = 50 * total_amount / 100
+    second_payment = 40 * total_amount / 100
+    final_payment = 10 * total_amount / 100
+    context = {
+        "order":order, 
+        "items" : items, 
+        "total_amount" : total_amount, 
+        'remain_amount' : remain_amount, 
+        "first_payment" : first_payment, 
+        "second_payment" : second_payment, 
+        "final_payment" : final_payment
+    }
+
+    html_string = render_to_string(
+        "base/orders/customer_secure_door_pdf.html", 
+        context
+    )
+    html = HTML(string=html_string, base_url=request.build_absolute_uri())
+    result = html.write_pdf(presentational_hints=True)
 
     response = HttpResponse(content_type="application/pdf")
     response['Content-Disposition'] = f'inline; filename=customer_order_{order.id}.pdf'
