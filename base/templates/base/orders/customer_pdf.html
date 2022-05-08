@@ -7,24 +7,32 @@
         <style type="text/css">
             body{
                 font-family: 'Baloo Bhaijaan 2', cursive !important;
+                
+                padding: 0px;
+                margin: 0px;
             }
             h1{
                 text-align: center;
             }
             .right{
-                width: 48%;
+                width: 40%;
             }
             .left{
-                width: 48%;
+                width: 60%;
                 position: absolute;
                 right: 0px;
             }
-            h3{
+            p{
                 text-align: right;
                 padding: 0px;
                 margin: 0px;
             }
-            .right h3{
+            h3, h2{
+                text-align: right;
+                padding: 0px;
+                margin: 0px;
+            }
+            .right p{
                 text-align: left;
             }
 
@@ -51,23 +59,34 @@
                 position: absolute;
                 right: 0px;
             }
+
+            @page {
+            size: Letter;
+            margin: 0in 0.24in 0.2in 0.24in;
+        }
             
         </style>
     </head>
     <body>
-        <h1>صنایع چوبی برادران احمدی</h1>
+        <h1>قرار داد صنایع چوبی احمدیان غزنوی</h1>
         <hr>
         <div class="left">
-            <h3>نام مشتری : {{order.customer.first_name}} {{order.customer.last_name}}</h3>
-            <h3 style="margin-top: 7px;">آدرس : {{order.customer.address}}</h3>
+            <p>این قرار داد فی مابین صنایع چوبی احمدیان با محترم "{{order.customer.first_name}} {{order.customer.last_name}}" میباشد. </p>
+            <p style="margin-top: 7px;">آدرس ساختمان مشتری : {{order.customer.address}}</p>
+            <p style="margin-bottom: 10;">شماره تماس مشتری : {{order.customer.phone_number}}</p>
         </div>
         <div class="right">
-            <h3> شماره تماس : 0794153462</h3>
-            <h3> تاریخ : {{order.date_ordered|date:"Y/m/d"}}</h3>
+            <p> شماره تماس دفتر : 0729030251</p>
+            <p> تاریخ قرار داد : {{order.date_ordered|date:"Y/m/d"}}</p>
+            <p> تاریخ ختم قرار داد : {{order.completion_date|date:"Y/m/d"}}</p>
         </div>
 
-        <br><br>
-
+        <br>
+        <h2 style="margin-top: 10px;">قرار داد خط :</h2>
+        <p style="margin-top: 5px; text-align: right;">
+            در این قرار داد ساخت و نصب دروازه های داخل آپارتمان و دروازه های ورودی ساختمان (ضد سرقت، کابینیت آشپزخانه، میز و دیکوریشن دفاتر و منازل و کلکین) میباشد. شروع کار بعد از اجرا قسط اول صورت میگیرد و مسولیت اندازه گیری، نصب و تحویل دهی به عهده صنایع چوبی احمدیان میباشد. پس از پرداخت فرمایش قطعی میگردد و امکان هیچ گونه تغییرات وجود ندارد و اگر تغییر در دیزاین و اندازه فرمایش آمد مشتری باید قبل از شروع کار به مسول شرکت اطلاع دهد در غیر آن صورت شرکت هیچ گونه مسولیت نمی پذیرد و همچنان خرابی رنگ بعد از تحویل دهی به مشتری به دوش شرکت نمیباشد.
+        </p>
+        <br>
         <table dir="rtl">
             <thead>
                 <tr>
@@ -92,7 +111,8 @@
                 {% endfor %}
             </tbody>
         </table>
-        <br>
+        <br><br>
+
         <h3>مجموع پول : {{total_amount}}</h3>
         <h3>مقدار پیش پرداخت : {{order.paid_amount}}</h3>
         <h3>مقدار باقی مانده : {{remain_amount}}</h3>
@@ -100,6 +120,8 @@
         <p style="text-align: right;">
         نوت: لطفا تا تصفیه کامل حساب تان بل مذکور را با خود داشته باشید.
         </p>
+
+        <br><br><br>
         
         <div class="customer_sign" style="text-align: right;">
             امضاَ مشتری -----------------------------------

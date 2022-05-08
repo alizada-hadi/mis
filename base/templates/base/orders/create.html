@@ -182,6 +182,24 @@
                         {% csrf_token %}
                         <p class="alert alert-info text-center mt-2 font-size-18">
                             تعداد کل فرمایشات مشتری {{customer.first_name}} {{customer.last_name}} <span class="badge badge-primary px-2 py-1 align-middle font-size-20 ">{{customer.order_set.all.count}}</span> می باشد. آیا میخواهید فرمایش جدید ثبت شود؟                        </p>
+                        
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <label for="" class="font-size-18">تاریخ ثبت فرمایش</label>
+                                <input type="text" class="form-control form-control-lg" name="added_at" id="rDatepicker">
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="" class="font-size-18">تاریخ تحویل </label>
+                                <input type="text" class="form-control form-control-lg" name="done_order" id="gDatepicker">
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="" class="font-size=18">تفصیلات</label>
+                                <textarea name="description" id="" class="form-control form-control-lg" cols="30" placeholder="تفصیلات فرمایش شما..." rows="4"></textarea>
+                            </div>
+                        </div>
+
+
+
 
                         <button class="btn btn-lg btn-light mt-1">ایجاد فرمایش جدید</button>
                     </form>
@@ -235,13 +253,16 @@
     <script>
         // recieve_datepicker
         $(document).ready(function() {
-            $("#recieve_datepicker").pDatepicker({
+            $("#rDatepicker").pDatepicker({
                 format: 'YYYY-MM-DD',
             calendar:{
                 persian: {
                     locale: 'fa'
                 }
             }
+            })
+            $("#gDatepicker").pDatepicker({
+                format: 'YYYY-MM-DD',
             })
         })
 

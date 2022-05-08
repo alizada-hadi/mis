@@ -32,7 +32,9 @@
     #depth, 
     #direction, 
     #color, 
-    #work_type
+    #work_type, 
+    #completion_date, 
+    #description
     {
         display: none;
     }
@@ -248,7 +250,7 @@
                                    گزینه ها <i class="mdi mdi-chevron-down ml-1"></i> 
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item font-size-18" target="_blank" href="{% url 'customer-order-pdf' order.id %}">چاپ بل برای مشتری</a>
+                                    <a class="dropdown-item font-size-18" target="_blank" href="{% url 'customer-order-pdf' order.id %}">چاپ قرار داد خط</a>
                                     <a class="dropdown-item font-size-18" target="_blank" href="{% url 'employee-order-pdf' order.id %}">چاپ بل برای کارمند</a>
                                 </div>
                             </div>
@@ -357,19 +359,15 @@
   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
   crossorigin="anonymous"></script>
     <script>
-    //     #painter, #quantity, 
-    // #alternative, 
-    // #vacum, 
-    // #meter, 
-    // #price_per, 
-    // #price_unit,
-    // #height, 
-    // #width,
-    // #depth, 
-    // #direction, 
-    // #color, 
-    // #work_type
         $(document).ready(function(){
+            $("#cdatepicker").pDatepicker({
+                format: 'YYYY-MM-DD',
+            calendar:{
+                persian: {
+                    locale: 'fa'
+                }
+            }
+            })
           $("#category").change(function(){
               var val = $(this).val();
               if(val == "پرس" || val == "سی ان سی"){
@@ -382,11 +380,14 @@
                   $("#quantity").show()
                   $("#price_per").show()
                   $("#price_unit").show()
+                  $("#description").show()
                   $("#work_type").show()
+                  $("#completion_date").show()
                 }
                 else if(val == "دروازه ضد سرقت"){
                     $("#color").hide()
                     $("#vacum").show()
+                    $("#description").show()
                     $("#direction").show()
                     $("#height").show()
                     $("#width").show()
@@ -395,17 +396,20 @@
                     $("#price_per").show()
                     $("#price_unit").show()
                     $("#work_type").show()
+                    $("#completion_date").show()
                     
                 }
-                else if(val == "دروازه" || val == "کلکین" || val == "چوکات ترکی"){
+                else if(val == "دروازه" || val == "کلکین" || val == "چوکات"){
                     $("#direction").show()
                     $("#height").show()
                     $("#width").show()
                     $("#depth").show()
+                    $("#description").show()
                     $("#color").show()
                     $("#work_type").show()
                     $("#quantity").show()
                     $("#price_per").show()
+                    $("#completion_date").show()
                     $("#price_unit").show()
                     $("#vacum").hide()
             }
@@ -413,10 +417,12 @@
                     $("#height").show()
                     $("#width").show()
                     $("#depth").show()
+                    $("#description").show()
                     $("#direction").hide()
                     $("#color").hide()
                     $("#vacum").hide()
                     $("#quantity").show()
+                    $("#completion_date").show()
                     $("#price_per").show()
                     $("#price_unit").show()
                 }
@@ -430,12 +436,14 @@
                 $("#width").hide()
                 $("#depth").hide()
                 $("#direction").hide()
+                $("#completion_date").hide()
                 $("#color").hide()
                 $("#work_type").hide()
             }
-          })  
+          })
           
         })
+        
         var label = document.getElementById("price_unit_label")
         $("#unit_price").change(function(){
             var value = $(this).val()
@@ -466,6 +474,9 @@
             `
             order_detail_id.value = id
         }))
+
+
+        
 
         
     </script>

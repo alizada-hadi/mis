@@ -105,11 +105,16 @@ def order_create_view(request, pk):
         last_recieved_at = d.recieve_set.last()
 
     if request.method == "POST":
+        recieve_date = request.POST.get("added_at")
+        done_date = request.POST.get("done_order")
+        description =  request.POST.get("description")
         order = Order.objects.create(
             customer=customer,
             paid_amount = 0,
             total_amount = 0, 
-            date_ordered = date_in_hijri
+            date_ordered = date_in_hijri,
+            completion_date = date_in_hijri,
+            description=description,
         )
         if order:
             messages.success(request, "فرمایش جدید موفقانه ثبت گردید.")
@@ -228,6 +233,7 @@ def order_detail_view(request, pk):
             direction = "راست"
         elif direction == "left":
             direction = 'چپ'
+        
 
         try:
             OrderDetail.objects.create(
@@ -242,6 +248,7 @@ def order_detail_view(request, pk):
             price=Decimal(price), 
             alternative=Decimal(alternative),
             price_unit=price_unit,
+            with_color=with_color,
             type=work_type, 
             )
             order.total_amount += Decimal(quantity) * Decimal(price)

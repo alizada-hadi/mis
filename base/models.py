@@ -86,6 +86,8 @@ class Order(models.Model):
     paid_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="مقدار پرداخت شده", null=True, blank=True)
     total_amount = models.DecimalField(max_digits=8, decimal_places=2, default=0)
     date_ordered = models.DateField()
+    completion_date = models.DateField()
+    description = models.TextField(null=True, blank=True)
 
 
     def __str__(self):
@@ -144,6 +146,8 @@ class OrderDetail(models.Model):
     remain_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="مقدار باقی مانده")
     with_color =  models.CharField(max_length=20, choices=WITH_COLOR, null=True, blank=True)
     type = models.CharField(max_length=200, verbose_name="نوعیت کار")
+    
+
 
     def save(self, *args, **kwargs):
         if not self.total:
