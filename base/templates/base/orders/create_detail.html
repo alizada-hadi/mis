@@ -105,7 +105,7 @@
                             <div class="row">
                                 <div class="col-3">
                                     <div>
-                                        <p class="text-dark mb-2 font-size-20">تعداد فرمایشات</p>
+                                        <p class="text-dark mb-2 font-size-20">تعداد جزییات</p>
                                         <h5 class="mb-0">{{items_count}}</h5>
                                     </div>
                                 </div>
@@ -147,7 +147,16 @@
         <div class="col-lg-10 m-auto">
             <div class="card">
                 <div class="card-body">
-                    <h3 class="text-dark" style="font-weight: bold;">لیست فرمایش</h3>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <h3 class="text-dark" style="font-weight: bold;">لیست فرمایش</h3>
+                        </div>
+                        <div class="col-lg-6">
+                            <a href="{{request.META.HTTP_REFERER}}" class="btn btn-info btn-sm font-size-18 float-right mb-3">برگشت
+                                <i class="mdi mdi-keyboard-backspace align-middle font-size-20 ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
                     <table class="table table-sm table-bordered table-striped">
                         <thead>
                             <tr>
@@ -170,11 +179,20 @@
                                     <td class="font-size-16 text-center">{{item.category.name}}</td>
                                     <td class="font-size-16 text-center">{{item.type}}</td>
                                     <td class="font-size-16 text-center">
-                                        {% if item.with_color == "نخیر" %}
+                                        {% if item.category.name != "دروازه ضد سرقت" %}
+                                            {% if item.with_color == "نخیر" %}
                                             <span class="badge badge-danger px-2 py-1 font-size-16">نخیر</span>
-                                        {% else %}
-                                        <span class="badge badge-primary px-2 py-1 font-size-16">بلی</span>
+                                            {% else %}
+                                            <span class="badge badge-primary px-2 py-1 font-size-16">بلی</span>
+                                            {% endif %}
+                                        {% else  %}
+                                            {% if item.with_vacum == "واکیوم" %}
+                                            <span class="badge badge-danger px-2 py-1 font-size-16">واکیوم</span>
+                                            {% else %}
+                                            <span class="badge badge-primary px-2 py-1 font-size-16">رنگ</span>
+                                            {% endif %}
                                         {% endif %}
+                                        
                                     </td>
                                     <td class="font-size-16 text-center">{{item.direction}}</td>
                                     <td class="font-size-16 text-center">{{item.quantity}}</td>
@@ -200,11 +218,20 @@
                                     <td class="font-size-16 text-center">{{item.category.name}}</td>
                                     <td class="font-size-16 text-center">{{item.type}}</td>
                                     <td class="font-size-16 text-center">
-                                        {% if item.with_color == "نخیر" %}
+                                        {% if item.category.name != "دروازه ضد سرقت" %}
+                                            {% if item.with_color == "نخیر" %}
                                             <span class="badge badge-danger px-2 py-1 font-size-16">نخیر</span>
-                                        {% else %}
-                                        <span class="badge badge-primary px-2 py-1 font-size-16">بلی</span>
+                                            {% else %}
+                                            <span class="badge badge-primary px-2 py-1 font-size-16">بلی</span>
+                                            {% endif %}
+                                        {% else  %}
+                                            {% if item.with_vacum == "واکیوم" %}
+                                            <span class="badge badge-danger px-2 py-1 font-size-16">واکیوم</span>
+                                            {% else %}
+                                            <span class="badge badge-primary px-2 py-1 font-size-16">رنگ</span>
+                                            {% endif %}
                                         {% endif %}
+                                        
                                     </td>
                                     <td class="font-size-16 text-center">{{item.direction}}</td>
                                     <td class="font-size-16 text-center">{{item.quantity}}</td>

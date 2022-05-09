@@ -9,6 +9,11 @@ import math
 import datetime as my_time
 from users.decorators import allowed_groups
 from django.contrib.auth.decorators import login_required
+from io import StringIO, BytesIO
+import xlsxwriter
+from django.http import HttpResponse
+
+
 
 # list expenses
 @login_required(login_url="login")
@@ -347,3 +352,51 @@ def today_expense_view(request):
     }
 
     return render(request, "base/expenses/daily.html", context)
+
+
+# import expense reports
+
+
+
+def yearly_report_export(request):
+    output = BytesIO()
+    workbook = xlsxwriter.Workbook(output)
+    worksheet = workbook.add_worksheet()
+    bold = workbook.add_format({"bold" : True})
+    money = workbook.add_format({"num_format" : "$#, ##0"})
+    date_format = workbook.add_format({"num_format" : "YYYY-MM-dd"})
+    # data header
+    worksheet.write('A1', 'نمبر', bold)
+    worksheet.write('B1', 'عنوان مصرف', bold)
+    worksheet.write('C1', 'تاریخ مصرف', bold)
+    worksheet.write('D1', 'مقدار مصرف', bold)
+    worksheet.write('E1', 'پرداخت شده', bold)
+    worksheet.write('F1', 'باقی مانده', bold)
+    
+    expenses = (
+        ["1", "معاش کارمندان", "1400-01-20", 20000, 20000, 0],
+        ["2", "معاش کارمندان", "1400-01-20", 20000, 20000, 0],
+        ["3", "معاش کارمندان", "1400-01-20", 20000, 20000, 0],
+        ["4", "معاش کارمندان", "1400-01-20", 20000, 20000, 0],
+        ["5", "معاش کارمندان", "1400-01-20", 20000, 20000, 0]
+    )
+    
+    row = 1
+    col = 0
+
+    for number, title, date_str, total, paid, remained in (expenses):
+        worksheet.write_string(row,  col, number)
+        worksheet.write_datetime(row, col+1, date_str, date_format)
+    
+    workbook.close()
+
+
+    response = HttpResponse(content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment;filename="some_file_name.xlsx"'
+    # put the spreadsheet data into the response
+    response.write(output.getvalue())
+    # return the response
+    return response
+
+
+

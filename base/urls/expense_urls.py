@@ -9,5 +9,6 @@ urlpatterns = [
     path("expense/annual/report/",  expense_views.annual_expense_view, name="expense-annual"), 
     path("expense/monthly/report/", expense_views.monthly_expenses_view, name="expense-monthly"), 
     path("expense/weekly/report/", expense_views.weekly_expenses_view, name="expense-weekly"), 
-    path("expense/daily/report/", expense_views.today_expense_view, name="expense-daily")
+    path("expense/daily/report/", expense_views.today_expense_view, name="expense-daily"), 
+    path("export/expense/", expense_views.yearly_report_export, name="export-expense")
 ]

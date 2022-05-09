@@ -9,6 +9,9 @@ from django.contrib.auth.decorators import login_required
 @login_required(login_url="login")
 @allowed_groups(groups=['admin', 'superadmin'])
 def dashboard(request):
+    now = datetime.now()
+    now_in_hijri = date2jalali(now)
+
     labels = []
     data = {
         "income" : [], 
@@ -29,8 +32,11 @@ def dashboard(request):
         data["date"].append(exp.exp_date.strftime("%Y-%m-%d"))
 
     for i in incomes:
-        data["income"].append(int(i.total))
+        total_per_day = 0
+        if(str(now_in_hijri) == i.recieved_at.strftime("%Y-%m-%d")) : 
+            total_per_day += int(i.total)
         data["date"].append(i.recieved_at.strftime("%Y-%m-%d"))
+        data["income"].append(int(i.total))
     
     for i in range(1, 13):
         order_data['number_of_order'].append(Order.objects.filter(date_ordered__month=i).count())

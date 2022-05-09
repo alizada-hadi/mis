@@ -19,65 +19,6 @@
 
 {% block content %}
 
-<!-- recieve modal start -->
-<div class="modal fade" id="recieve" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title mt-0">دریافت پول از مشتری  {{customer.first_name}} {{customer.last_name}}</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="{% url 'add-recieve' %}" method="POST">
-                    {% csrf_token %}
-                    <div>
-                        <label for="" class="font-size-18">دریافت بابت</label>
-                        <select name="order" class="form-control form-control-lg" id="">
-                            <option value="">-----</option>
-                            {% for order in orders %}
-                                <option value="{{order.id}}">{{order.date_ordered|date:"Y-m-d"}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="mt-2">
-                        <label for="" class="font-size-18">مقدار پول به عدد</label>
-                        <input type="number" class="form-control form-control-lg" placeholder="10000" name="amount">
-                    </div>
-                    <div class="mt-2">
-                        <label for="" class="font-size-18">مقدار پول به حروف</label>
-                        <input type="text" class="form-control form-control-lg" placeholder="ده هزار" name="amount_letter">
-                    </div>
-                    <div class="mt-2">
-                        <label for="" class="font-size-18">تاریخ دریافت</label>
-                        <input type="text" id="recieve_datepicker" class="form-control form-control-lg"  name="recieve_date">
-                    </div>
-                    <button class="btn btn-lg btn-light mt-4">ذخیره کردن</button>
-                </form>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div>
-<!-- recieve modal end -->
-
-<!-- recieve list modal start -->
-<div class="modal fade" id="recieve_list" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title mt-0"> لیست دریافتی ها از مشتری  {{customer.first_name}} {{customer.last_name}}</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div>
-<!-- recieve list modal end -->
 
 
 
@@ -165,12 +106,30 @@
                             <h3 class="text-dark" style="font-weight: bold;">ثبت فرمایش جدید</h3>
                         </div>
                         <div class="col-lg-6">
-                            <button 
-                            data-toggle="modal"
-                            data-target="#recieve"
-                            class="btn btn-dark btn-sm float-right font-size-18">دریافت پول
-                            <i class="mdi mdi-cash align-middle font-size-22 ml-1 "></i>
+                        <a href="{% url 'customer-list' %}" class="btn btn-info btn-sm font-size-18 ml-2 float-right">
+                            برگشت به لیست مشتریان
+                            <i class="mdi mdi-keyboard-backspace align-middle font-size-22 ml-1"></i>
+                        </a>
+                        {% if remain_total_amount == 0 %}
+                        <button 
+                        data-toggle="modal"
+                            class="btn btn-success btn-sm float-right font-size-18">حساب تصفیه شد
+                            <i class="mdi mdi-check align-middle font-size-22 ml-1 "></i>
                         </button>
+                        {% elif total == recieved_amount %}
+                        <button 
+                        data-toggle="modal"
+                            class="btn btn-success btn-sm float-right font-size-18">تصفیه شد
+                            <i class="mdi mdi-check align-middle font-size-22 ml-1 "></i>
+                        </button>
+                        {% else %}
+                            <button 
+                                data-toggle="modal"
+                                data-target="#recieve"
+                                class="btn btn-dark btn-sm float-right font-size-18">دریافت پول
+                                <i class="mdi mdi-cash align-middle font-size-22 ml-1 "></i>
+                            </button>
+                        {% endif %}
                         <a href="{% url 'recieve-list' customer.pk %}" class="btn btn-primary btn-sm float-right font-size-18 mr-2">
                         لیست دریافتی ها
                         <i class="mdi mdi-format-list-numbered align-middle font-size-22 ml-1"></i>
@@ -186,14 +145,14 @@
                         <div class="row">
                             <div class="col-lg-3">
                                 <label for="" class="font-size-18">تاریخ ثبت فرمایش</label>
-                                <input type="text" class="form-control form-control-lg" name="added_at" id="rDatepicker">
+                                <input type="text" class="form-control form-control-lg" name="added_at" id="rDatepicker" required>
                             </div>
                             <div class="col-lg-3">
                                 <label for="" class="font-size-18">تاریخ تحویل </label>
-                                <input type="text" class="form-control form-control-lg" name="done_order" id="completionDatepicker">
+                                <input type="text" class="form-control form-control-lg" name="done_order" id="completionDatepicker" required>
                             </div>
                             <div class="col-lg-6">
-                                <label for="" class="font-size=18">تفصیلات</label>
+                                <label for="" class="font-size-18">تفصیلات</label>
                                 <textarea name="description" id="" class="form-control form-control-lg" cols="30" placeholder="تفصیلات فرمایش شما..." rows="4"></textarea>
                             </div>
                         </div>
@@ -221,15 +180,15 @@
                                         <td class="font-size-17 text-center">#{{order.id}}</td>
                                         <td class="font-size-17 text-center">{{order.orderdetail_set.all.count}}</td>
                                         <td class="font-size-17 text-center">
-                                            <a href="{% url 'order-detail' order.pk %}" class="btn btn-outline-secondary btn-sm">
-                                                <i class="bx bx-dots-horizontal-rounded font-size-22 align-middle"></i>
+                                            <a href="{% url 'order-detail' order.pk %}" class="btn btn-outline-secondary font-size-16 btn-sm">
+                                                جزییات فرمایش
                                             </a>
                                             <button 
                                             data-toggle="modal"
                                             data-target="#delete_order"
                                             data-id="{{order.id}}"
-                                            class="btn btn-outline-danger btn-sm delete-btns">
-                                                <i class="bx bx-trash font-size-22 align-middle"></i>
+                                            class="btn btn-outline-danger btn-sm delete-btns font-size-16">
+                                                حذف فرمایش
                                             </button>
                                         </td>
                                     </tr>
@@ -252,8 +211,17 @@
     crossorigin="anonymous"></script>
     <script>
         // recieve_datepicker
+        // recieve_datepicker
         $(document).ready(function() {
             $("#rDatepicker").pDatepicker({
+                format: 'YYYY-MM-DD',
+            calendar:{
+                persian: {
+                    locale: 'fa'
+                }
+            }
+            })
+            $("#recieve_datepicker").pDatepicker({
                 format: 'YYYY-MM-DD',
             calendar:{
                 persian: {
@@ -284,5 +252,51 @@
 
 
     </script>
+
+
+<!-- recieve modal start -->
+<div class="modal fade" id="recieve" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title mt-0">دریافت پول از مشتری  {{customer.first_name}} {{customer.last_name}}</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'add-recieve' %}" method="POST">
+                    {% csrf_token %}
+                    <div>
+                        <label for="" class="font-size-18">دریافت بابت</label>
+                        <select name="order" class="form-control form-control-lg" id="">
+                            <option value="">-----</option>
+                            {% for order in orders %}
+                                <option value="{{order.id}}">{{order.date_ordered|date:"Y-m-d"}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mt-2">
+                        <label for="" class="font-size-18">مقدار پول به عدد</label>
+                        <input type="number" class="form-control form-control-lg" placeholder="10000" name="amount">
+                    </div>
+                    <div class="mt-2">
+                        <label for="" class="font-size-18">مقدار پول به حروف</label>
+                        <input type="text" class="form-control form-control-lg" placeholder="ده هزار" name="amount_letter">
+                    </div>
+                    <div class="mt-2">
+                        <label for="" class="font-size-18">تاریخ دریافت</label>
+                        <input type="text" id="recieve_datepicker" class="form-control form-control-lg"  name="recieve_date">
+                    </div>
+                    <button class="btn btn-lg btn-light mt-4">ذخیره کردن</button>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- recieve modal end -->
+
+
+
 
 {% endblock content %}
