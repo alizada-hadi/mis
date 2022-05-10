@@ -29,4 +29,5 @@ urllib3==1.26.9
 weasyprint==54.3
 webencodings==0.5.1
 whitenoise==6.0.0
+XlsxWriter==3.0.3
 zopfli==0.2.1
