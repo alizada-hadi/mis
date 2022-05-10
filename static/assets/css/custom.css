@@ -1,5 +1,8 @@
+
+ 
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300&display=swap');
 body{
-    font-family: 'Baloo Bhaijaan 2', cursive !important;
+    font-family: 'Noto Sans Arabic', sans-serif !important;
 }
 
 #sidebar-menu ul li{
