@@ -384,9 +384,7 @@ def yearly_report_export(request):
     row = 1
     col = 0
 
-    for number, title, date_str, total, paid, remained in (expenses):
-        worksheet.write_string(row,  col, number)
-        worksheet.write_datetime(row, col+1, date_str, date_format)
+    
     
     workbook.close()
 
